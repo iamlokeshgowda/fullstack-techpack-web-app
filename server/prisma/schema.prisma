@@ -97,6 +97,9 @@ model EmailToken {
   type      EmailTokenType
   expiresAt DateTime
   createdAt DateTime @default(now())
+  used      Boolean  @default(false)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, type])
 }

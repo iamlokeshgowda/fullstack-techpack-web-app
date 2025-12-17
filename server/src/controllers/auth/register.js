@@ -1,11 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import {
-  generateAccessToken,
-  generateEmailVerificationToken,
-  generateRefreshToken,
-} from "../../utils/jwt.js";
+import { generateEmailVerificationToken } from "../../utils/jwt.js";
 import { sendVerificationEmail } from "../../utils/email.js";
 
 const prisma = new PrismaClient();
@@ -27,10 +22,10 @@ export const register = async (req, res) => {
         name,
         email,
         password: hashedPassword,
+        isEmailVerified: false,
       },
     });
 
-    // Create verification token
     const token = generateEmailVerificationToken(user.id);
     await prisma.emailToken.create({
       data: {
@@ -49,7 +44,7 @@ export const register = async (req, res) => {
       message: "Registered successfully. Please verify your email.",
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Register error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -8,10 +8,15 @@ export const generateRefreshToken = (payload) => {
   return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
 };
 
-export const generateEmailVerificationToken = (payload) => {
+export const generateEmailVerificationToken = (userId) => {
   return jwt.sign(
-    payload,
-    process.env.EMAIL_VERIFY_SECRET
-    // {expiresIn:"24h"}
+    {
+      userId,
+      type: "VERIFY_EMAIL",
+    },
+    process.env.EMAIL_VERIFY_SECRET,
+    {
+      expiresIn: "24h",
+    }
   );
 };
