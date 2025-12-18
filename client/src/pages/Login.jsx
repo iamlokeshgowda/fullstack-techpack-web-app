@@ -44,6 +44,7 @@ export default function Login() {
 
   const handleGoogleLogin = async (credential) => {
     dispatch(authStart());
+    console.log(credential);
     try {
       const res = await api.post("/auth/google", { idToken: credential });
       dispatch(authSuccess(res.data));
@@ -56,47 +57,47 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-      <div className="hidden lg:flex flex-col justify-center px-16 bg-gradient-to-br from-emerald-600 to-emerald-800 text-white">
-        <h1 className="text-4xl font-bold mb-4">TechPack Platform</h1>
-        <p className="text-lg text-emerald-100">
+    <div className='min-h-screen grid grid-cols-1 lg:grid-cols-2'>
+      <div className='hidden lg:flex flex-col justify-center px-16 bg-gradient-to-br from-emerald-600 to-emerald-800 text-white'>
+        <h1 className='text-4xl font-bold mb-4'>TechPack Platform</h1>
+        <p className='text-lg text-emerald-100'>
           Design, manage, and download professional tech packs.
         </p>
       </div>
 
-      <div className="flex items-center justify-center px-6">
+      <div className='flex items-center justify-center px-6'>
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8"
+          className='w-full max-w-md bg-white rounded-2xl shadow-xl p-8'
         >
-          <h2 className="text-2xl font-semibold mb-6">Sign in</h2>
+          <h2 className='text-2xl font-semibold mb-6'>Sign in</h2>
 
           <input
-            type="email"
-            placeholder="Email"
-            className="w-full mb-4 px-4 py-2 border rounded-lg"
+            type='email'
+            placeholder='Email'
+            className='w-full mb-4 px-4 py-2 border rounded-lg'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
           <input
-            type="password"
-            placeholder="Password"
-            className="w-full mb-3 px-4 py-2 border rounded-lg"
+            type='password'
+            placeholder='Password'
+            className='w-full mb-3 px-4 py-2 border rounded-lg'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+          {error && <p className='text-red-500 text-sm mb-3'>{error}</p>}
 
           <button
             disabled={loading}
-            className="w-full bg-emerald-600 text-white py-2.5 rounded-lg disabled:opacity-60"
+            className='w-full bg-emerald-600 text-white py-2.5 rounded-lg disabled:opacity-60'
           >
             {loading ? "Signing in..." : "Login"}
           </button>
 
-          <div className="my-4 text-center text-sm text-gray-400">OR</div>
+          <div className='my-4 text-center text-sm text-gray-400'>OR</div>
 
           <GoogleLogin
             onSuccess={(res) => handleGoogleLogin(res.credential)}
