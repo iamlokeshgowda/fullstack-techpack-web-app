@@ -14,7 +14,7 @@ export const getProducts = async (req, res) => {
         productPrice: true,
         images: true,
         isActive: true,
-        createdAt: true,
+        updatedAt: true,
         category: {
           select: {
             id: true,
@@ -32,9 +32,9 @@ export const getProducts = async (req, res) => {
         productSlug: product.productSlug,
         productName: product.productName,
         productPrice: product.productPrice,
-        images: product.images,
+        images: product.images[0] ? product.images[0] : null,
         isActive: product.isActive,
-        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
         categoryPath: product.category
           ? await buildCategoryPath(product.category)
           : [],
