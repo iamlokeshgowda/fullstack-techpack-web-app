@@ -12,11 +12,39 @@ const prisma = new PrismaClient();
 
 export const getCategories = async (req, res) => {
   try {
-    const categories = await prisma.category.findMany();
+    const categories = await prisma.category.findMany({
+      select: {
+        id: true,
+        catName: true,
+        catSlug: true,
+        parentId: true,
+        isActive: true,
+        createdAt: true,
+      },
+    });
+
+    const categoryMap = new Map();
+
+    categories.forEach((cat) => {
+      categoryMap.set(cat.id, { ...cat, children: [] });
+    });
+
+    const categoryTree = [];
+
+    categories.forEach((cat) => {
+      if (cat.parentId) {
+        const parent = categoryMap.get(cat.parentId);
+        if (parent) {
+          parent.children.push(categoryMap.get(cat.id));
+        }
+      } else {
+        categoryTree.push(categoryMap.get(cat.id));
+      }
+    });
 
     return sendResponse(res, {
       message: "Categories fetched successfully",
-      data: categories,
+      data: categoryTree,
     });
   } catch (error) {
     return sendResponse(res, {

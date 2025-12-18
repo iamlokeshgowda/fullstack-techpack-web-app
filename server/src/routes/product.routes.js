@@ -7,8 +7,7 @@ import { deleteProduct } from "../controllers/products/deleteProduct.js";
 const router = Router();
 
 router.get("/products", getProducts);
-router.post("/product", createProduct);
-// router.put("/categories/:id", authorize("ADMIN USER"), updateCategory);
+router.post("/product", authorize("ADMIN"), createProduct);
 router.delete("/product/:id", authorize("ADMIN"), deleteProduct);
 
 export default router;
