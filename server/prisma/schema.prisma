@@ -103,3 +103,18 @@ model EmailToken {
 
   @@unique([userId, type])
 }
+
+
+model Category {
+  id              String   @id @default(uuid())
+  catName         String
+  catSlug         String   @unique
+  catMetaDesc     String?
+  catMetaKeyword  String?
+
+  parentId        String?  @default("")
+  isActive        Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
