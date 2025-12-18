@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authorize } from "../middlewares/auth.middleware.js";
 import {
   createCategory,
   deleteCategory,
@@ -10,7 +11,7 @@ const router = Router();
 
 router.get("/categories", getCategories);
 router.post("/categories", createCategory);
-router.put("/categories/:id", updateCategory);
-router.delete("/categories/:id", deleteCategory);
+router.put("/categories/:id", authorize("ADMIN"), updateCategory);
+router.delete("/categories/:id", authorize("ADMIN"), deleteCategory);
 
 export default router;
