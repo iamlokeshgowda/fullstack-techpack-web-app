@@ -5,12 +5,12 @@ import {
   deleteCategory,
   getCategories,
   updateCategory,
-} from "../controllers/categories/index.js";
+} from "../controllers/categories/category.controller.js";
 
 const router = Router();
 
 router.get("/categories", getCategories);
-router.post("/category", authorize("ADMIN"), createCategory);
+router.post("/category", createCategory);
 router.put("/category/:id", authorize("ADMIN"), updateCategory);
 router.delete("/category/:id", authorize("ADMIN"), deleteCategory);
 

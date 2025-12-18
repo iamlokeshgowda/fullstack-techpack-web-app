@@ -54,7 +54,6 @@ export const createCategory = async (req, res) => {
         message: "Category slug already exists",
       });
     }
-
     if (!(await validateParentCategory(null, parentId))) {
       return sendResponse(res, {
         statusCode: 400,
@@ -69,7 +68,7 @@ export const createCategory = async (req, res) => {
         catSlug,
         catMetaDesc,
         catMetaKeyword,
-        parentId,
+        parentId: parentId || null,
         isActive,
       },
     });
@@ -118,7 +117,6 @@ export const updateCategory = async (req, res) => {
         message: "Invalid parent category assignment",
       });
     }
-
     const updatedCategory = await prisma.category.update({
       where: { id },
       data: payload,

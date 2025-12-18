@@ -54,3 +54,31 @@ export const normalizeImages = (images) => {
   if (Array.isArray(images)) return images;
   return [images];
 };
+
+export const buildCategoryPath = async (category) => {
+  const path = [];
+
+  let current = category;
+
+  while (current) {
+    path.unshift({
+      id: current.id,
+      catName: current.catName,
+      catSlug: current.catSlug,
+    });
+
+    if (!current.parentId) break;
+
+    current = await prisma.category.findUnique({
+      where: { id: current.parentId },
+      select: {
+        id: true,
+        catName: true,
+        catSlug: true,
+        parentId: true,
+      },
+    });
+  }
+
+  return path;
+};

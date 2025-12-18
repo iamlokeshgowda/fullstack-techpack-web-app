@@ -23,22 +23,37 @@ export const isSlugExists = async (catSlug, excludeId = null) => {
   return !!category;
 };
 
-// 🚫 Validate parent assignment
 export const validateParentCategory = async (id, parentId) => {
+  // ✅ Root category
   if (!parentId) return true;
 
-  // Self-parenting
-  if (id === parentId) return false;
-
-  // Parent is child (1-level deep protection)
-  const invalidParent = await prisma.category.findFirst({
-    where: {
-      id: parentId,
-      parentId: id,
-    },
+  // 🔍 Parent must exist
+  const parentCategory = await prisma.category.findUnique({
+    where: { id: parentId },
   });
 
-  return !invalidParent;
+  if (!parentCategory) {
+    return false; // ❌ Invalid parent
+  }
+
+  // 🚫 Self-parenting (update case)
+  if (id && id === parentId) {
+    return false;
+  }
+
+  // 🚫 Prevent 1-level cycle (update case)
+  if (id) {
+    const invalidParent = await prisma.category.findFirst({
+      where: {
+        id: parentId,
+        parentId: id,
+      },
+    });
+
+    if (invalidParent) return false;
+  }
+
+  return true;
 };
 
 export const hasProductsInCategory = async (categoryId) => {
