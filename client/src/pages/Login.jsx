@@ -5,6 +5,7 @@ import api from "../services/axios";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
+import { SERVER_ROUTES } from "../utils/constants";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -31,10 +32,10 @@ export default function Login() {
     dispatch(authStart());
 
     try {
-      const res = await api.post("/auth/login", { email, password });
+      const res = await api.post(SERVER_ROUTES.AUTH_LOGIN, { email, password });
       dispatch(authSuccess(res.data));
       toast.success("Login successful");
-      navigate("/dashboard");
+      navigate(ROUTES.DASHBOARD);
     } catch (err) {
       const code = err.response?.data?.code;
       setErrorCode(code);
@@ -46,10 +47,12 @@ export default function Login() {
     dispatch(authStart());
     console.log(credential);
     try {
-      const res = await api.post("/auth/google", { idToken: credential });
+      const res = await api.post(SERVER_ROUTES.AUTH_GOOGLE, {
+        idToken: credential,
+      });
       dispatch(authSuccess(res.data));
       toast.success("Logged in with Google");
-      navigate("/dashboard");
+      navigate(ROUTES.DASHBOARD);
     } catch {
       dispatch(authFailure("Google login failed"));
       toast.error("Google login failed");

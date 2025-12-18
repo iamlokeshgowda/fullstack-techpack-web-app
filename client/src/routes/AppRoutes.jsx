@@ -9,17 +9,18 @@ import NotFound from "../pages/NotFound";
 import Categories from "../pages/admin/Categories";
 import RequireAuth from "./RequireAuth";
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import { ROUTES } from "../utils/constants";
 
 const AppRoutes = () => {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
+      <Route path={ROUTES.LOGIN} element={<Login />} />
+      <Route path={ROUTES.REGISTER} element={<Register />} />
 
       {/* Protected Routes */}
       <Route
-        path='/dashboard'
+        path={ROUTES.DASHBOARD}
         element={
           <ProtectedRoute>
             <Dashboard />
@@ -28,7 +29,7 @@ const AppRoutes = () => {
       />
 
       <Route
-        path='/profile'
+        path={ROUTES.PROFILE}
         element={
           <ProtectedRoute>
             <Profile />
@@ -38,7 +39,7 @@ const AppRoutes = () => {
 
       {/* Admin Routes */}
       <Route
-        path='/admin/dashboard'
+        path={ROUTES.ADMIN_DASHBOARD}
         element={
           <RequireAuth allowedRoles={["ADMIN"]}>
             <AdminDashboard />
@@ -47,7 +48,7 @@ const AppRoutes = () => {
       />
 
       <Route
-        path='/admin/categories'
+        path={ROUTES.ADMIN_CATEGORIES}
         element={
           <RequireAuth allowedRoles={["ADMIN"]}>
             <Categories />
@@ -56,7 +57,7 @@ const AppRoutes = () => {
       />
       {/* Fallback */}
 
-      <Route path='/unauthorized' element={<NotFound />} />
+      <Route path={ROUTES.UNAUTHORIZED} element={<NotFound />} />
       <Route path='*' element={<NotFound />} />
     </Routes>
   );

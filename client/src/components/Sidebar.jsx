@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
+import { ROUTES } from "../utils/constants";
 
 const menu = [
-  { name: "Dashboard", path: "/admin/dashboard" },
-  { name: "Categories", path: "/admin/categories" },
-  { name: "Products", path: "/admin/products" },
-  { name: "Users", path: "/admin/users" },
+  { label: "Dashboard", path: ROUTES.ADMIN_DASHBOARD },
+  { label: "Categories", path: ROUTES.ADMIN_CATEGORIES },
+  { label: "Products", path: ROUTES.ADMIN_PRODUCTS },
 ];
 
 const Sidebar = () => {
@@ -27,7 +27,7 @@ const Sidebar = () => {
               }`
             }
           >
-            {item.name}
+            {item.label}
           </NavLink>
         ))}
       </nav>
