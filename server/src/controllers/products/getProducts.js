@@ -5,11 +5,11 @@ const prisma = new PrismaClient();
 
 export const getProducts = async (req, res) => {
   try {
-    const categories = await prisma.Product.findMany();
+    const products = await prisma.Product.findMany();
 
     return sendResponse(res, {
       message: "Products fetched successfully",
-      data: categories,
+      data: products,
     });
   } catch (error) {
     return sendResponse(res, {
