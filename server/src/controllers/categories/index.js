@@ -5,6 +5,7 @@ import {
   validateParentCategory,
   getCategoryById,
   hasChildCategories,
+  hasProductsInCategory,
 } from "./category.helper.js";
 
 const prisma = new PrismaClient();
@@ -141,6 +142,7 @@ export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // 🔍 Check category exists
     const category = await getCategoryById(id);
     if (!category) {
       return sendResponse(res, {
@@ -150,6 +152,16 @@ export const deleteCategory = async (req, res) => {
       });
     }
 
+    // 📦 Check products exist under this category
+    if (await hasProductsInCategory(id)) {
+      return sendResponse(res, {
+        statusCode: 409,
+        success: false,
+        message: "Cannot delete category. Products exist under this category.",
+      });
+    }
+
+    // 🌳 Check child categories
     if (await hasChildCategories(id)) {
       return sendResponse(res, {
         statusCode: 409,
@@ -159,6 +171,7 @@ export const deleteCategory = async (req, res) => {
       });
     }
 
+    // ✅ Delete category
     await prisma.category.delete({ where: { id } });
 
     return sendResponse(res, {

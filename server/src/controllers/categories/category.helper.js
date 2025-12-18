@@ -40,3 +40,10 @@ export const validateParentCategory = async (id, parentId) => {
 
   return !invalidParent;
 };
+
+export const hasProductsInCategory = async (categoryId) => {
+  const count = await prisma.product.count({
+    where: { catId: categoryId },
+  });
+  return count > 0;
+};

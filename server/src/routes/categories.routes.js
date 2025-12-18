@@ -10,8 +10,8 @@ import {
 const router = Router();
 
 router.get("/categories", getCategories);
-router.post("/categories", createCategory);
-router.put("/categories/:id", authorize("ADMIN"), updateCategory);
-router.delete("/categories/:id", authorize("ADMIN"), deleteCategory);
+router.post("/category", authorize("ADMIN"), createCategory);
+router.put("/category/:id", authorize("ADMIN"), updateCategory);
+router.delete("/category/:id", authorize("ADMIN"), deleteCategory);
 
 export default router;

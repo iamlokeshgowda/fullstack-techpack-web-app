@@ -118,3 +118,35 @@ model Category {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
+
+
+model Product {
+  id                String   @id @default(uuid())
+
+  productSlug       String   @unique
+  productName       String
+
+  metaDesc          String?
+  metaKeyword       String?
+  metaJson          String?
+
+  shortDescription  String?
+  longDescription   String?
+  addiInfo           String?
+
+  productPrice      Decimal  @db.Decimal(10, 2)
+
+  // 🔗 Category relation
+  catId             String
+  
+  // 🖼 Images from S3 (multiple)
+  images             String[] @db.Text
+
+  // 📥 Single download link from S3
+  downloadLink       String?
+
+  isActive          Boolean  @default(true)
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
