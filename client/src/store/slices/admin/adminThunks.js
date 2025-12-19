@@ -8,7 +8,7 @@ export const getCategories = createAsyncThunk(
   "admin/getCategories",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get(SERVER_ROUTES.GET_CATEGORIES);
+      const response = await api.get(SERVER_ROUTES.CATEGORIES);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(
@@ -22,7 +22,7 @@ export const deleteCategory = createAsyncThunk(
   "admin/deleteCategory",
   async (id, { rejectWithValue }) => {
     try {
-      await api.delete(`${SERVER_ROUTES.DELETE_CATEGORY}/${id}`);
+      await api.delete(`${SERVER_ROUTES.CATEGORIES}/${id}`);
       return id;
     } catch (error) {
       return rejectWithValue(
@@ -30,6 +30,45 @@ export const deleteCategory = createAsyncThunk(
           error.response?.data?.message || "Failed to delete category"
         )
       );
+    }
+  }
+);
+
+export const updateCategory = createAsyncThunk(
+  "admin/updateCategory",
+  async ({ id, payload }, { rejectWithValue }) => {
+    try {
+      const response = await api.put(
+        `${SERVER_ROUTES.CATEGORIES}/${id}`,
+        payload
+      );
+
+      toast.success("Category updated successfully");
+      return response.data.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to update category";
+
+      toast.error(message);
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const createCategory = createAsyncThunk(
+  "admin/createCategory",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await api.post(SERVER_ROUTES.CATEGORIES, payload);
+
+      toast.success("Category created successfully");
+      return response.data.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to create category";
+
+      toast.error(message);
+      return rejectWithValue(message);
     }
   }
 );

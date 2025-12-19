@@ -3,10 +3,15 @@ import { useEffect, useState } from "react";
 import { PlusIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 
 import CategoryTree from "./components/CategoryTree";
-import { getCategories } from "../../store/slices/admin/adminThunks";
+import {
+  createCategory,
+  getCategories,
+  updateCategory,
+} from "../../store/slices/admin/adminThunks";
 import AdminLayout from "../../layouts/AdminLayout";
 import { showConfirmDialog } from "../../store/slices/ui/confirmDialogSlice";
 import SpinnerOverlay from "../../components/SpinnerOverlay";
+import CategoryFormModal from "./components/CategoryFormModal";
 
 export default function Categories() {
   const dispatch = useDispatch();
@@ -85,12 +90,21 @@ export default function Categories() {
           />
         ) : null}
         {/* Edit / Add Form (future) */}
-        {/* {editingCategory && (
-          <CategoryForm
+        {editingCategory && (
+          <CategoryFormModal
             category={editingCategory}
+            categories={data}
             onClose={() => setEditingCategory(null)}
+            onSubmit={(payload) => {
+              if (editingCategory.id) {
+                dispatch(updateCategory({ id: editingCategory.id, payload }));
+              } else {
+                dispatch(createCategory(payload));
+              }
+              setEditingCategory(null);
+            }}
           />
-        )} */}
+        )}
       </div>
     </AdminLayout>
   );
