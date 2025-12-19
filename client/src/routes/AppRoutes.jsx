@@ -55,6 +55,15 @@ const AppRoutes = () => {
           </RequireAuth>
         }
       />
+
+      <Route
+        path={ROUTES.ADMIN_PRODUCTS}
+        element={
+          <RequireAuth allowedRoles={["ADMIN"]}>
+            <Categories />
+          </RequireAuth>
+        }
+      />
       {/* Fallback */}
 
       <Route path={ROUTES.UNAUTHORIZED} element={<NotFound />} />

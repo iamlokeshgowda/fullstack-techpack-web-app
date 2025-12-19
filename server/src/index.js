@@ -21,10 +21,13 @@ app.use(
 app.use(express.json());
 
 // mount auth routes
-app.use("/api", categoriesRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api", prductsRoutes);
 
+//only admin can access these routes
+app.use("/api/admin", prductsRoutes);
+app.use("/api/admin", categoriesRoutes);
+
+// start server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

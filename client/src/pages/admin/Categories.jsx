@@ -5,6 +5,8 @@ import { PlusIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import CategoryTree from "./components/CategoryTree";
 import { getCategories } from "../../store/slices/admin/adminThunks";
 import AdminLayout from "../../layouts/AdminLayout";
+import { showConfirmDialog } from "../../store/slices/ui/confirmDialogSlice";
+import SpinnerOverlay from "../../components/SpinnerOverlay";
 
 export default function Categories() {
   const dispatch = useDispatch();
@@ -23,10 +25,16 @@ export default function Categories() {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Delete this category?")) {
-      console.log("Delete:", id);
-      // dispatch(deleteCategory(id))
-    }
+    dispatch(
+      showConfirmDialog({
+        title: "Delete Category",
+        message:
+          "Are you sure you want to delete this category? This action cannot be undone.",
+        confirmText: "Delete",
+        actionType: "DELETE_CATEGORY",
+        actionPayload: id,
+      })
+    );
   };
 
   return (
@@ -64,17 +72,18 @@ export default function Categories() {
           </div>
         </div>
 
-        {/* Content */}
-        {status === "loading" ? (
-          <p className='text-gray-500'>Loading categories...</p>
-        ) : (
-          <CategoryTree
-            categories={data}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        )}
+        <CategoryTree
+          categories={data}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
 
+        {status === "loading" ? (
+          <SpinnerOverlay
+            show={status === "loading"}
+            text='Loading categories...'
+          />
+        ) : null}
         {/* Edit / Add Form (future) */}
         {/* {editingCategory && (
           <CategoryForm

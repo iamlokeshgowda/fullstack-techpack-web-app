@@ -17,7 +17,7 @@ const Sidebar = () => {
       <nav className='p-4 space-y-2'>
         {menu.map((item) => (
           <NavLink
-            key={item.path}
+            key={item.label}
             to={item.path}
             className={({ isActive }) =>
               `block px-4 py-2 rounded ${

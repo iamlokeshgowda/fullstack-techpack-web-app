@@ -19,4 +19,8 @@ export const SERVER_ROUTES = {
   AUTH_LOGIN: "/auth/login",
   AUTH_REGISTER: "/auth/register",
   AUTH_GOOGLE: "/auth/google",
+
+  // ===== CATEGORIES =====
+  GET_CATEGORIES: "/admin/categories",
+  DELETE_CATEGORY: "/admin/category",
 };
