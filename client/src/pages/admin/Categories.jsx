@@ -16,9 +16,8 @@ import CategoryFormModal from "./components/CategoryFormModal";
 export default function Categories() {
   const dispatch = useDispatch();
   const { data, status } = useSelector((state) => state.admin.categories);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-
   useEffect(() => {
     if (data.length === 0) {
       dispatch(getCategories());
@@ -95,13 +94,24 @@ export default function Categories() {
             category={editingCategory}
             categories={data}
             onClose={() => setEditingCategory(null)}
-            onSubmit={(payload) => {
-              if (editingCategory.id) {
-                dispatch(updateCategory({ id: editingCategory.id, payload }));
-              } else {
-                dispatch(createCategory(payload));
+            onSubmit={async (payload) => {
+              try {
+                setIsSubmitting(true);
+
+                if (editingCategory.id) {
+                  await dispatch(
+                    updateCategory({ id: editingCategory.id, payload })
+                  ).unwrap();
+                } else {
+                  await dispatch(createCategory(payload)).unwrap();
+                }
+
+                setEditingCategory(null); // close only on success
+              } catch (error) {
+                // stay open
+              } finally {
+                setIsSubmitting(false);
               }
-              setEditingCategory(null);
             }}
           />
         )}

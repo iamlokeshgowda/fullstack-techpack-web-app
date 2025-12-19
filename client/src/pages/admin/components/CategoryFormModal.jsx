@@ -68,6 +68,7 @@ const CategoryFormModal = ({
   category,
   onClose,
   onSubmit,
+  isSubmitting = false,
   categories = [],
 }) => {
   const [form, setForm] = useState({
@@ -119,15 +120,11 @@ const CategoryFormModal = ({
   };
 
   useEffect(() => {
-    const nameSlug = slugify(form.catName);
-
-    const parentSlug = buildParentSlugPath(categories, form.parentId);
-
-    const fullSlug = parentSlug ? `${parentSlug}-${nameSlug}` : nameSlug;
+    const catSlug = slugify(form.catName);
 
     setForm((prev) => ({
       ...prev,
-      catSlug: fullSlug,
+      catSlug,
     }));
   }, [form.catName, form.parentId, categories]);
 
@@ -214,6 +211,7 @@ const CategoryFormModal = ({
             <label className='block text-sm font-medium mb-1'>
               Parent Category
             </label>
+
             <select
               name='parentId'
               value={form.parentId ?? ""}
@@ -222,11 +220,17 @@ const CategoryFormModal = ({
             >
               <option value=''>None</option>
 
-              {flatCategories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.label}
-                </option>
-              ))}
+              {flatCategories.map((c) => {
+                const isSelf = category?.id === c.id;
+                const isChild = childIds.includes(c.id);
+
+                return (
+                  <option key={c.id} value={c.id} disabled={isSelf || isChild}>
+                    {c.label}
+                    {isSelf ? " (Current)" : isChild ? " (Child)" : ""}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
@@ -252,7 +256,8 @@ const CategoryFormModal = ({
             </button>
             <button
               type='submit'
-              className='px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700'
+              disabled={isSubmitting}
+              className='px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50'
             >
               Save
             </button>

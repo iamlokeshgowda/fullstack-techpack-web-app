@@ -75,11 +75,11 @@ export const createCategory = async (req, res) => {
       });
     }
 
-    if (await isSlugExists(catSlug)) {
+    if (await isSlugExists(catSlug, parentId)) {
       return sendResponse(res, {
         statusCode: 409,
         success: false,
-        message: "Category slug already exists",
+        message: "Category with same slug already exists under this parent",
       });
     }
     if (!(await validateParentCategory(null, parentId))) {
@@ -130,11 +130,14 @@ export const updateCategory = async (req, res) => {
       });
     }
 
-    if (payload.catSlug && (await isSlugExists(payload.catSlug, id))) {
+    if (
+      payload.catSlug &&
+      (await isSlugExists(payload.catSlug, payload.parentId, id))
+    ) {
       return sendResponse(res, {
         statusCode: 409,
         success: false,
-        message: "Category slug already exists",
+        message: "Category with same slug already exists under this parent",
       });
     }
 
