@@ -134,7 +134,7 @@ const CategoryFormModal = ({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'>
-      <div className='bg-white rounded-lg w-full max-w-md shadow-lg'>
+      <div className='bg-white rounded-lg w-full max-w-2xl shadow-lg'>
         {/* Header */}
         <div className='flex justify-between items-center px-6 py-4 border-b'>
           <h3 className='text-lg font-semibold'>
@@ -146,8 +146,10 @@ const CategoryFormModal = ({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className='p-6 space-y-4'>
-          {/* Name */}
+        <form
+          onSubmit={handleSubmit}
+          className='p-6 grid grid-cols-1 md:grid-cols-2 gap-4'
+        >
           <div>
             <label className='block text-sm font-medium mb-1'>
               Category Name
@@ -161,7 +163,6 @@ const CategoryFormModal = ({
             />
           </div>
 
-          {/* Slug (Auto-generated) */}
           <div>
             <label className='block text-sm font-medium mb-1'>
               Category Slug
@@ -172,27 +173,8 @@ const CategoryFormModal = ({
               readOnly
               className='w-full border rounded px-3 py-2 bg-gray-100 text-gray-600 cursor-not-allowed'
             />
-            <p className='text-xs text-gray-500 mt-1'>
-              Slug is auto-generated and cannot be edited
-            </p>
           </div>
 
-          {/* Meta Description */}
-          <div>
-            <label className='block text-sm font-medium mb-1'>
-              Meta Description
-            </label>
-            <textarea
-              name='catMetaDesc'
-              value={form.catMetaDesc}
-              onChange={handleChange}
-              rows={3}
-              className='w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500'
-              placeholder='SEO description (optional)'
-            />
-          </div>
-
-          {/* Meta Keywords */}
           <div>
             <label className='block text-sm font-medium mb-1'>
               Meta Keywords
@@ -201,17 +183,15 @@ const CategoryFormModal = ({
               name='catMetaKeyword'
               value={form.catMetaKeyword}
               onChange={handleChange}
-              className='w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500'
+              className='w-full border rounded px-3 py-2'
               placeholder='comma,separated,keywords'
             />
           </div>
 
-          {/* Parent Category (N-level) */}
           <div>
             <label className='block text-sm font-medium mb-1'>
               Parent Category
             </label>
-
             <select
               name='parentId'
               value={form.parentId ?? ""}
@@ -219,7 +199,6 @@ const CategoryFormModal = ({
               className='w-full border rounded px-3 py-2'
             >
               <option value=''>None</option>
-
               {flatCategories.map((c) => {
                 const isSelf = category?.id === c.id;
                 const isChild = childIds.includes(c.id);
@@ -234,19 +213,43 @@ const CategoryFormModal = ({
             </select>
           </div>
 
-          {/* Active */}
-          <div className='flex items-center gap-2'>
-            <input
-              type='checkbox'
-              name='isActive'
-              checked={form.isActive}
+          <div className='md:col-span-2'>
+            <label className='block text-sm font-medium mb-1'>
+              Meta Description
+            </label>
+            <textarea
+              name='catMetaDesc'
+              value={form.catMetaDesc}
               onChange={handleChange}
+              rows={3}
+              className='w-full border rounded px-3 py-2'
+              placeholder='SEO description (optional)'
             />
-            <span className='text-sm'>Active</span>
           </div>
 
-          {/* Actions */}
-          <div className='flex justify-end gap-3 pt-4'>
+          <div className='flex items-center gap-3'>
+            <span className='text-sm font-medium'>Categoty State</span>
+
+            <button
+              type='button'
+              onClick={() =>
+                setForm((prev) => ({ ...prev, isActive: !prev.isActive }))
+              }
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors
+      ${form.isActive ? "bg-green-600" : "bg-gray-300"}`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform
+        ${form.isActive ? "translate-x-6" : "translate-x-1"}`}
+              />
+            </button>
+
+            <span className='text-xs text-gray-500'>
+              {form.isActive ? "Active" : "In Active"}
+            </span>
+          </div>
+
+          <div className='md:col-span-2 flex justify-end gap-3 pt-4'>
             <button
               type='button'
               onClick={onClose}
