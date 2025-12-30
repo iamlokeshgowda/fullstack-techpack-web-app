@@ -1,10 +1,13 @@
 import ConfirmDialog from "./components/ConfirmDialog";
+import AppLayout from "./layouts/AppLayout";
 import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
     <>
-      <AppRoutes />
+      <AppLayout>
+        <AppRoutes />
+      </AppLayout>
       <ConfirmDialog />
     </>
   );

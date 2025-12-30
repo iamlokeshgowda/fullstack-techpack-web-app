@@ -1,13 +1,7 @@
-import { Navigate } from "react-router-dom";
+import RequireAuth from "./RequireAuth";
 
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("accessToken");
-
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return children;
+const ProtectedRoute = ({ allowedRoles, children }) => {
+  return <RequireAuth allowedRoles={allowedRoles}>{children}</RequireAuth>;
 };
 
 export default ProtectedRoute;

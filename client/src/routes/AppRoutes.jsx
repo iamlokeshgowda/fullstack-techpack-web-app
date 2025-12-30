@@ -1,3 +1,4 @@
+// routes/AppRoutes.jsx
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -7,10 +8,11 @@ import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
 import NotFound from "../pages/NotFound";
 import Categories from "../pages/admin/Categories";
-import RequireAuth from "./RequireAuth";
 import AdminDashboard from "../pages/admin/AdminDashboard";
-import { ROUTES } from "../utils/constants";
 import Home from "../pages/Home";
+
+import { ROUTES } from "../utils/constants";
+import Unauthorized from "../pages/Unauthorized";
 
 const AppRoutes = () => {
   return (
@@ -20,55 +22,21 @@ const AppRoutes = () => {
       <Route path={ROUTES.REGISTER} element={<Register />} />
       <Route path={ROUTES.HOME} element={<Home />} />
 
-      {/* Protected Routes */}
-      <Route
-        path={ROUTES.DASHBOARD}
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
+      {/* USER Protected Routes */}
+      <Route element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}>
+        <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+        <Route path={ROUTES.PROFILE} element={<Profile />} />
+      </Route>
 
-      <Route
-        path={ROUTES.PROFILE}
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
+      {/* ADMIN Routes */}
+      <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+        <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+        <Route path={ROUTES.ADMIN_CATEGORIES} element={<Categories />} />
+        <Route path={ROUTES.ADMIN_PRODUCTS} element={<Categories />} />
+      </Route>
 
-      {/* Admin Routes */}
-      <Route
-        path={ROUTES.ADMIN_DASHBOARD}
-        element={
-          <RequireAuth allowedRoles={["ADMIN"]}>
-            <AdminDashboard />
-          </RequireAuth>
-        }
-      />
-
-      <Route
-        path={ROUTES.ADMIN_CATEGORIES}
-        element={
-          <RequireAuth allowedRoles={["ADMIN"]}>
-            <Categories />
-          </RequireAuth>
-        }
-      />
-
-      <Route
-        path={ROUTES.ADMIN_PRODUCTS}
-        element={
-          <RequireAuth allowedRoles={["ADMIN"]}>
-            <Categories />
-          </RequireAuth>
-        }
-      />
       {/* Fallback */}
-
-      <Route path={ROUTES.UNAUTHORIZED} element={<NotFound />} />
+      <Route path={ROUTES.UNAUTHORIZED} element={<Unauthorized />} />
       <Route path='*' element={<NotFound />} />
     </Routes>
   );
