@@ -12,9 +12,9 @@ const RequireAuth = ({ children, allowedRoles }) => {
   }
 
   // ❌ Logged in but role not allowed
-  if (allowedRoles && !allowedRoles.includes(role)) {
-//       return <Navigate to='/unauthorized' replace />;
-//   }
+  // if (allowedRoles && !allowedRoles.includes(role)) {
+  //       return <Navigate to='/unauthorized' replace />;
+  //   }
 
   // ✅ Allowed
   return children;
