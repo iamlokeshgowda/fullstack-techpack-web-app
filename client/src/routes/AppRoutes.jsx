@@ -10,6 +10,7 @@ import Categories from "../pages/admin/Categories";
 import RequireAuth from "./RequireAuth";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import { ROUTES } from "../utils/constants";
+import Home from "../pages/Home";
 
 const AppRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes = () => {
       {/* Public Routes */}
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path={ROUTES.REGISTER} element={<Register />} />
+      <Route path={ROUTES.HOME} element={<Home />} />
 
       {/* Protected Routes */}
       <Route

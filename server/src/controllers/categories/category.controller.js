@@ -79,7 +79,7 @@ export const createCategory = async (req, res) => {
       return sendResponse(res, {
         statusCode: 409,
         success: false,
-        message: "Category with same slug already exists under this parent",
+        message: "Category with same name already exists under this parent",
       });
     }
     if (!(await validateParentCategory(null, parentId))) {
@@ -137,7 +137,7 @@ export const updateCategory = async (req, res) => {
       return sendResponse(res, {
         statusCode: 409,
         success: false,
-        message: "Category with same slug already exists under this parent",
+        message: "Category with same name already exists under this parent",
       });
     }
 

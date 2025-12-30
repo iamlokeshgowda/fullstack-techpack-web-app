@@ -5,6 +5,7 @@ export const ROUTES = {
   UNAUTHORIZED: "/unauthorized",
 
   // ===== USER =====
+  HOME: "/",
   DASHBOARD: "/dashboard",
   PROFILE: "/profile",
 

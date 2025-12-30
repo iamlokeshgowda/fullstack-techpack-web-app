@@ -35,6 +35,7 @@ export default function Login() {
       const res = await api.post(SERVER_ROUTES.AUTH_LOGIN, { email, password });
       dispatch(authSuccess(res.data));
       toast.success("Login successful");
+      //TODO: Redirect based on role
       navigate(ROUTES.DASHBOARD);
     } catch (err) {
       const code = err.response?.data?.code;
@@ -52,6 +53,7 @@ export default function Login() {
       });
       dispatch(authSuccess(res.data));
       toast.success("Logged in with Google");
+      //TODO: Redirect based on role
       navigate(ROUTES.DASHBOARD);
     } catch {
       dispatch(authFailure("Google login failed"));
