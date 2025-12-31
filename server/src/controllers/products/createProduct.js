@@ -13,10 +13,17 @@ export const createProduct = async (req, res) => {
   const {
     productSlug,
     productName,
+    metaDesc,
+    metaKeyword,
+    metaJson,
+    shortDescription,
+    longDescription,
+    addiInfo,
     productPrice,
     catId,
     images,
     downloadLink,
+    isActive,
   } = req.body;
 
   if (await isProductSlugExists(productSlug)) {
@@ -39,10 +46,17 @@ export const createProduct = async (req, res) => {
     data: {
       productSlug,
       productName,
+      metaDesc: metaDesc || null,
+      metaKeyword: metaKeyword || null,
+      metaJson: metaJson || null,
+      shortDescription: shortDescription || null,
+      longDescription: longDescription || null,
+      addiInfo: addiInfo || null,
       productPrice,
       catId,
       images: normalizeImages(images),
       downloadLink,
+      isActive: typeof isActive === "boolean" ? isActive : true,
     },
   });
 
