@@ -72,3 +72,19 @@ export const createCategory = createAsyncThunk(
     }
   }
 );
+
+// ================= PRODUCTS =================
+export const deleteProduct = createAsyncThunk(
+  "admin/deleteProduct",
+  async (id, { rejectWithValue }) => {
+    try {
+      await api.delete(`/admin/product/${id}`);
+      toast.success("Product deleted successfully");
+      return id;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to delete product"
+      );
+    }
+  }
+);

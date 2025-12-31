@@ -13,6 +13,7 @@ import Home from "../pages/Home";
 
 import { ROUTES } from "../utils/constants";
 import Unauthorized from "../pages/Unauthorized";
+import Products from "../pages/admin/Products";
 
 const AppRoutes = () => {
   return (
@@ -32,12 +33,12 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
         <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
         <Route path={ROUTES.ADMIN_CATEGORIES} element={<Categories />} />
-        <Route path={ROUTES.ADMIN_PRODUCTS} element={<Categories />} />
+        <Route path={ROUTES.ADMIN_PRODUCTS} element={<Products />} />
       </Route>
 
       {/* Fallback */}
       <Route path={ROUTES.UNAUTHORIZED} element={<Unauthorized />} />
-      <Route path='*' element={<NotFound />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

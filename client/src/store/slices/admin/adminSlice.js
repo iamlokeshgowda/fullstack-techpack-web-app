@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, combineReducers } from "@reduxjs/toolkit";
 import {
   getCategories,
   createCategory,
@@ -128,4 +128,11 @@ const adminSlice = createSlice({
   },
 });
 
-export default adminSlice.reducer;
+import productsReducer from "./productsSlice";
+
+const combined = combineReducers({
+  categories: adminSlice.reducer,
+  products: productsReducer,
+});
+
+export default combined;

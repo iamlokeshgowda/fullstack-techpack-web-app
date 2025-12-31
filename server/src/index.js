@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes.js";
 import categoriesRoutes from "./routes/categories.routes.js";
 import prductsRoutes from "./routes/product.routes.js";
+import s3Routes from "./routes/s3.routes.js";
 import publicRoutes from "./routes/public.routes.js";
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use("/api/auth", authRoutes);
 //only admin can access these routes
 app.use("/api/admin", prductsRoutes);
 app.use("/api/admin", categoriesRoutes);
+app.use("/api/admin/s3", s3Routes);
 app.use("/api/public", publicRoutes);
 
 // start server
