@@ -23,4 +23,7 @@ export const SERVER_ROUTES = {
 
   // ===== CATEGORIES =====
   CATEGORIES: "/admin/categories",
+
+  // ===== PUBLIC =====
+  PUBLIC_CATEGORIES: "/public/categories",
 };

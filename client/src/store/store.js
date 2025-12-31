@@ -1,7 +1,8 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage
+import storage from "redux-persist/lib/storage";
 import authReducer from "./slices/authSlice";
+import pubicReducer from "./slices/public/publicSlice";
 import adminReducer from "./slices/admin/adminSlice";
 import confirmDialogReducer from "./slices/ui/confirmDialogSlice";
 
@@ -9,6 +10,7 @@ import confirmDialogReducer from "./slices/ui/confirmDialogSlice";
 const rootReducer = combineReducers({
   auth: authReducer,
   admin: adminReducer,
+  public: pubicReducer,
   confirmDialog: confirmDialogReducer,
 });
 
