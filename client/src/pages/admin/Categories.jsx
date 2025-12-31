@@ -15,14 +15,16 @@ import CategoryFormModal from "./components/CategoryFormModal";
 
 export default function Categories() {
   const dispatch = useDispatch();
-  const { data, status } = useSelector((state) => state.admin.categories);
+  const { data, status } = useSelector(
+    (state) => state.admin.categories.categories
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   useEffect(() => {
-    if (data.length === 0) {
+    if (data?.length === 0) {
       dispatch(getCategories());
     }
-  }, [dispatch, data.length]);
+  }, [dispatch, data?.length]);
 
   const handleEdit = (category) => {
     setEditingCategory(category);

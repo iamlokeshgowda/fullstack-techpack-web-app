@@ -4,7 +4,9 @@ import { useEffect } from "react";
 import { getCategories } from "../../store/slices/admin/adminThunks";
 
 export default function AdminDashboard() {
-  const categories = useSelector((state) => state.admin.categories.data);
+  const categories = useSelector(
+    (state) => state.admin.categories.categories.data
+  );
   const dispatch = useDispatch();
   useEffect(() => {
     if (categories.length === 0) {
@@ -16,7 +18,7 @@ export default function AdminDashboard() {
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
         <div className='bg-white p-6 rounded shadow'>
           <h2 className='text-gray-500'>Total Categories</h2>
-          <p className='text-3xl font-bold'>{categories.length}</p>
+          <p className='text-3xl font-bold'>{categories?.length}</p>
         </div>
 
         <div className='bg-white p-6 rounded shadow'>

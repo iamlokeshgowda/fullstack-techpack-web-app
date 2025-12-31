@@ -9,7 +9,7 @@ import {
 const CategoryTree = ({ categories, onEdit, onDelete }) => {
   return (
     <ul className='ml-4 space-y-2'>
-      {categories.map((cat) => (
+      {categories?.map((cat) => (
         <CategoryNode
           key={cat.id}
           category={cat}
