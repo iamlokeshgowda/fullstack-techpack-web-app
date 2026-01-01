@@ -44,6 +44,14 @@ export default function AddProductForm({
     setFormData((prev) => ({ ...prev, images: files }));
   };
 
+  const removeExistingImage = (url) => {
+    setExistingImages(existingImages.filter((img) => img !== url));
+  };
+
+  const removeExistingDownload = () => {
+    setExistingDownloadUrl(null);
+  };
+
   const handleDownloadChange = (e) => {
     const file = e.target.files[0];
     if (
@@ -162,10 +170,16 @@ export default function AddProductForm({
           uploadPromises.push(
             fetch(p.putUrl, {
               method: "PUT",
-              headers: { "Content-Type": matchingImage.type },
+              headers: {
+                "Content-Type": matchingImage.type,
+              },
+              credentials: "include",
               body: matchingImage,
             }).then((r) => {
-              if (!r.ok) throw new Error("Failed to upload image to S3");
+              if (!r.ok)
+                throw new Error(
+                  `Failed to upload image to S3: ${r.statusText}`
+                );
               imageGetUrls.push(p.getUrl);
             })
           );
@@ -176,11 +190,16 @@ export default function AddProductForm({
           uploadPromises.push(
             fetch(p.putUrl, {
               method: "PUT",
-              headers: { "Content-Type": downloadFile.type },
+              headers: {
+                "Content-Type": downloadFile.type,
+              },
+              credentials: "include",
               body: downloadFile,
             }).then((r) => {
               if (!r.ok)
-                throw new Error("Failed to upload download file to S3");
+                throw new Error(
+                  `Failed to upload download file to S3: ${r.statusText}`
+                );
               downloadGetUrl = p.getUrl;
             })
           );
@@ -429,6 +448,65 @@ export default function AddProductForm({
             <p className="text-xs text-gray-500 mt-1">
               {formData.images.length} file(s) selected
             </p>
+
+            {/* Existing Images Preview */}
+            {existingImages.length > 0 && (
+              <div className="mt-4">
+                <p className="text-sm font-medium text-gray-600 mb-2">
+                  Existing Images:
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {existingImages.map((url, idx) => (
+                    <div key={idx} className="relative group">
+                      <img
+                        src={url}
+                        alt={`existing-${idx}`}
+                        className="w-full h-24 object-cover rounded border"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeExistingImage(url)}
+                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                      >
+                        <XMarkIcon className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* New Images Preview */}
+            {formData.images.length > 0 && (
+              <div className="mt-4">
+                <p className="text-sm font-medium text-gray-600 mb-2">
+                  New Images to Upload:
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {Array.from(formData.images).map((file, idx) => (
+                    <div key={idx} className="relative group">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        className="w-full h-24 object-cover rounded border"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-50 rounded opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <p className="text-white text-xs text-center px-1">
+                          {file.name}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeNewImage(idx)}
+                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                      >
+                        <XMarkIcon className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div>
@@ -444,6 +522,63 @@ export default function AddProductForm({
             <p className="text-xs text-gray-500 mt-1">
               {downloadFile ? downloadFile.name : "No file selected"}
             </p>
+
+            {/* Existing Download Preview */}
+            {existingDownloadUrl && (
+              <div className="mt-4 p-3 bg-blue-50 rounded border border-blue-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">
+                      ZIP
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-700">
+                        Download File (Existing)
+                      </p>
+                      <p className="text-xs text-gray-500 break-all">
+                        {existingDownloadUrl}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={removeExistingDownload}
+                    className="bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition"
+                  >
+                    <XMarkIcon className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* New Download Preview */}
+            {downloadFile && (
+              <div className="mt-4 p-3 bg-green-50 rounded border border-green-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-green-600 rounded flex items-center justify-center text-white text-xs font-bold">
+                      ZIP
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-700">
+                        New Download File
+                      </p>
+                      <p className="text-xs text-gray-600">
+                        {downloadFile.name} (
+                        {(downloadFile.size / 1024).toFixed(2)} KB)
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setDownloadFile(null)}
+                    className="bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition"
+                  >
+                    <XMarkIcon className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-3">
             <input

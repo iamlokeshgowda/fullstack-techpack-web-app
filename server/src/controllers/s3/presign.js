@@ -35,7 +35,9 @@ export const presignFiles = async (req, res) => {
           Key: key,
           ContentType: file.type || "application/octet-stream",
         });
-        const putUrl = await getSignedUrl(s3, putCommand, { expiresIn: 300 });
+        const putUrl = await getSignedUrl(s3, putCommand, {
+          expiresIn: 300,
+        });
 
         // Signed GET URL to store in DB (longer expiry, e.g., 7 days)
         const getCommand = new GetObjectCommand({ Bucket: bucket, Key: key });
