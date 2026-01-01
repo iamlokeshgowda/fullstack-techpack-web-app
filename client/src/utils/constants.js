@@ -27,4 +27,5 @@ export const SERVER_ROUTES = {
 
   // ===== PUBLIC =====
   PUBLIC_CATEGORIES: "/public/categories",
+  PUBLIC_PRODUCTS: "/public/products",
 };

@@ -1,17 +1,6 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useState, useMemo, useEffect } from "react";
 
-/* =======================
-   HELPERS (SAME FILE)
-======================= */
-// Convert text to URL-safe slug
-const slugify = (text) =>
-  text
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-");
-
 // Find category by id in tree
 const findCategoryById = (categories, id) => {
   for (const cat of categories) {
@@ -24,15 +13,6 @@ const findCategoryById = (categories, id) => {
   return null;
 };
 
-// Build full parent slug path (N-level)
-const buildParentSlugPath = (categories, parentId) => {
-  if (!parentId) return "";
-
-  const parent = findCategoryById(categories, parentId);
-  if (!parent) return "";
-
-  return parent.catSlug;
-};
 // Flatten category tree (N-level) for dropdown
 const flattenCategories = (categories, level = 0, result = []) => {
   categories.forEach((cat) => {
@@ -103,11 +83,18 @@ const CategoryFormModal = ({
       [name]: type === "checkbox" ? checked : value,
     }));
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Normalize parentId
+    // URL safe slug check
+    const slugRegex = /^[a-z0-9-]+$/;
+    if (!slugRegex.test(form.catSlug)) {
+      alert(
+        "Category slug must contain only lowercase letters, numbers, and hyphens."
+      );
+      return;
+    }
+
     const payload = {
       ...form,
       parentId:
@@ -118,15 +105,6 @@ const CategoryFormModal = ({
 
     onSubmit(payload);
   };
-
-  useEffect(() => {
-    const catSlug = slugify(form.catName);
-
-    setForm((prev) => ({
-      ...prev,
-      catSlug,
-    }));
-  }, [form.catName, form.parentId, categories]);
 
   /* =======================
      UI
@@ -170,8 +148,9 @@ const CategoryFormModal = ({
             <input
               name='catSlug'
               value={form.catSlug}
-              readOnly
-              className='w-full border rounded px-3 py-2 bg-gray-100 text-gray-600 cursor-not-allowed'
+              onChange={handleChange}
+              required
+              className='w-full border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500'
             />
           </div>
 

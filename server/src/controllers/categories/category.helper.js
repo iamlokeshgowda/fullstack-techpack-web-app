@@ -16,19 +16,14 @@ export const hasChildCategories = async (id) => {
 };
 
 // 🔁 Check duplicate slug (exclude current category)
-export const isSlugExists = async (
-  catSlug,
-  parentId = null,
-  excludeId = null
-) => {
-  const where = {
-    catSlug,
-    parentId: parentId ?? null,
-    ...(excludeId && { NOT: { id: excludeId } }),
-  };
-
-  const category = await prisma.category.findFirst({ where });
-  return !!category;
+export const isSlugExists = async (catSlug, excludeId = null) => {
+  return await prisma.category.findFirst({
+    where: {
+      catSlug,
+      ...(excludeId && { NOT: { id: excludeId } }),
+    },
+    select: { id: true },
+  });
 };
 
 export const validateParentCategory = async (id, parentId) => {

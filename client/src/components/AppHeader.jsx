@@ -1,61 +1,50 @@
 // components/AppHeader.jsx
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { ROUTES } from "../utils/constants";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/slices/authSlice";
-import { getPublicCategories } from "../store/slices/public/publicThunks";
+import {
+  getPublicCategories,
+  getPublicProducts,
+} from "../store/slices/public/publicThunks";
 import MobileCategoryDrawer from "./MobileCategoryDrawer";
 import logo from "../assets/logo.png";
 
 export default function AppHeader() {
   const [hoveredCatId, setHoveredCatId] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [openProfileMenu, setOpenProfileMenu] = useState(false);
-
-  const profileRef = useRef(null);
 
   const { user } = useSelector((state) => state.auth);
-  const { categories } = useSelector((state) => state.public);
-
+  const { categories, products } = useSelector((state) => state.public);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
+  /** Fetch categories once if list is empty */
   useEffect(() => {
-    if (categories.status === "idle") {
+    if (!categories.data?.length && categories.status === "idle") {
       dispatch(getPublicCategories());
     }
-  }, [categories.status, dispatch]);
+    if (!products.data?.length && products.status === "idle") {
+      dispatch(getPublicProducts());
+    }
+  }, [dispatch]);
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate(ROUTES.LOGIN);
   };
-
-  // Close profile menu when clicking outside
-  useEffect(() => {
-    const closeDropdown = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target)) {
-        setOpenProfileMenu(false);
-      }
-    };
-
-    document.addEventListener("mousedown", closeDropdown);
-    return () => document.removeEventListener("mousedown", closeDropdown);
-  }, []);
 
   return (
     <>
       <header className='sticky top-0 z-50 bg-white shadow'>
         <div className='max-w-12xl mx-auto px-6'>
           <div className='flex h-16 items-center justify-between'>
-            {/* LEFT: LOGO + MOBILE MENU */}
-            <div className='flex items-center gap-4'>
-              <Link to='/' className='text-xl font-bold text-blue-600'>
+            <div className='flex items-center gap-10'>
+              {/* LEFT — LOGO */}
+              <Link to='/'>
                 <img alt='logo' src={logo} className='h-14' />
               </Link>
 
-              {/* CENTER: DESKTOP NAV */}
+              {/* CENTER — DESKTOP CATEGORY MEGA MENU */}
               <nav className='hidden md:flex gap-8 items-center relative'>
                 {categories.status === "succeeded" &&
                   categories.data.map((cat) => (
@@ -110,29 +99,22 @@ export default function AppHeader() {
                   ))}
               </nav>
             </div>
-
-            {/* RIGHT: SEARCH + PROFILE + CART */}
+            {/* RIGHT — SEARCH + PROFILE + CART */}
             <div className='flex items-center gap-5'>
+              {/* Search */}
               <input
                 placeholder='Search product...'
                 className='hidden md:block border rounded px-3 py-1 w-64 focus:ring-2 focus:ring-blue-500 outline-none'
               />
 
-              {/* PROFILE DROPDOWN */}
-              {/* PROFILE DROPDOWN — open on hover */}
-              <div
-                className='relative group' // 👈 group enables hover control
-              >
-                {/* Profile Icon */}
-                <div className='flex items-center justify-center'>
-                  <span className='text-2xl cursor-pointer'>👤</span>
-                </div>
+              {/* PROFILE — HOVER DROPDOWN */}
+              <div className='relative group'>
+                <span className='text-2xl cursor-pointer'>👤</span>
 
-                {/* DROPDOWN */}
                 <div
                   className='absolute right-0 mt-2 w-56 bg-white shadow-lg border rounded-md py-4 z-50
-               opacity-0 invisible group-hover:opacity-100 group-hover:visible
-               transition-all duration-200'
+                  opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                  transition-all duration-200'
                 >
                   {/* NOT LOGGED IN */}
                   {!user && (
@@ -179,13 +161,16 @@ export default function AppHeader() {
                   )}
                 </div>
               </div>
-              {/* CART ICON */}
+
+              {/* CART */}
               <Link to='/cart' className='relative'>
                 <span className='text-2xl'>🛒</span>
                 <span className='absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full px-1'>
                   0
                 </span>
               </Link>
+
+              {/* MOBILE HAMBURGER */}
               <button
                 onClick={() => setDrawerOpen(true)}
                 className='md:hidden text-2xl text-gray-700'
@@ -197,7 +182,7 @@ export default function AppHeader() {
         </div>
       </header>
 
-      {/* MOBILE DRAWER (with backdrop inside) */}
+      {/* MOBILE DRAWER */}
       <MobileCategoryDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}

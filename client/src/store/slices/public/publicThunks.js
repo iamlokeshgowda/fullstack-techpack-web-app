@@ -16,3 +16,17 @@ export const getPublicCategories = createAsyncThunk(
     }
   }
 );
+
+export const getPublicProducts = createAsyncThunk(
+  "public/getProducts",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get(SERVER_ROUTES.PUBLIC_PRODUCTS);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch categories"
+      );
+    }
+  }
+);

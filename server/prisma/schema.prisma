@@ -112,7 +112,7 @@ model EmailToken {
 model Category {
   id             String  @id @default(uuid())
   catName        String
-  catSlug        String
+  catSlug        String  @unique
   catMetaDesc    String?
   catMetaKeyword String?
 

@@ -17,12 +17,9 @@ export const googleLogin = async (req, res) => {
       idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    console.log(".ticket...", ticket);
 
     const payload = ticket.getPayload();
     const { email, name, email_verified, sub: googleId } = payload;
-
-    console.log("payload....", payload);
 
     if (!email_verified) {
       return res.status(403).json({ message: "Google email not verified" });
