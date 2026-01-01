@@ -7,7 +7,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 
 const region = process.env.AWS_REGION;
-const bucket = process.env.S3_BUCKET;
+const bucket = process.env.AWS_BUCKET;
 
 const s3 = new S3Client({ region });
 
@@ -23,17 +23,16 @@ export const presignFiles = async (req, res) => {
 
     const presigned = await Promise.all(
       files.map(async (file) => {
-        const ext = file.name.split(".").pop();
-        const key = `uploads/${Date.now()}_${randomId()}_${file.name.replace(
-          /[^a-zA-Z0-9.\-]/g,
-          "_"
-        )}`;
+        const safeName = file.name.replace(/[^a-zA-Z0-9.\-]/g, "_");
+        const folder =
+          (file.purpose || "").toLowerCase() === "image" ? "images" : "files";
+        const key = `${folder}/${Date.now()}_${randomId()}_${safeName}`;
 
         // PUT URL for upload
         const putCommand = new PutObjectCommand({
           Bucket: bucket,
           Key: key,
-          ContentType: file.type || "application/octet-stream",
+          ContentType: file.type,
         });
         const putUrl = await getSignedUrl(s3, putCommand, {
           expiresIn: 300,

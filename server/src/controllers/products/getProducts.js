@@ -32,7 +32,7 @@ export const getProducts = async (req, res) => {
         productSlug: product.productSlug,
         productName: product.productName,
         productPrice: product.productPrice,
-        images: product.images[0] ? product.images[0] : null,
+        images: product.images || [],
         isActive: product.isActive,
         updatedAt: product.updatedAt,
         categoryPath: product.category
