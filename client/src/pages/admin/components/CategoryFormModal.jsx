@@ -21,7 +21,7 @@ const flattenCategories = (categories, level = 0, result = []) => {
       label: `${"— ".repeat(level)}${cat.catName}`,
     });
 
-    if (cat.children?.length) {
+    if (level < 1 && cat.children?.length) {
       flattenCategories(cat.children, level + 1, result);
     }
   });

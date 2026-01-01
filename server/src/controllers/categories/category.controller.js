@@ -75,7 +75,7 @@ export const createCategory = async (req, res) => {
       });
     }
 
-    if (await isSlugExists(form.catSlug)) {
+    if (await isSlugExists(catSlug)) {
       return sendResponse(res, {
         statusCode: 400,
         success: false,
@@ -130,7 +130,7 @@ export const updateCategory = async (req, res) => {
       });
     }
 
-    if (await isSlugExists(form.catSlug, req.params.id)) {
+    if (await isSlugExists(payload.catSlug, req.params.id)) {
       return sendResponse(res, {
         statusCode: 400,
         success: false,
