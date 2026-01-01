@@ -25,8 +25,7 @@ export const getPublicProducts = async (req, res) => {
     // 🔥 transform to return only first image (or empty string)
     products = products.map((item) => ({
       ...item,
-      image: item.images?.[0] ?? "", // return single image
-      // OR: image: item.images?.[0] ?? null
+      category: item.category.id,
     }));
 
     return sendResponse(res, {
