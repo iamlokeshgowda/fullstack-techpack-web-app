@@ -9,14 +9,14 @@ export default function ProductCard({ product }) {
   return (
     <Link
       to={`/product/${product.productSlug}`}
-      className='block bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition border'
+      className='block bg-white overflow-hidden shadow hover:shadow-lg transition border'
     >
       {/* IMAGE AREA */}
       <div className='w-full bg-white'>
         <img
           src={imgSrc}
           alt={product.productName}
-          className='w-full h-56 object-contain bg-white'
+          className='w-full h-50 object-contain bg-white'
         />
       </div>
 
