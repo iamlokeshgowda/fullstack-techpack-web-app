@@ -55,6 +55,12 @@ export const updateProduct = async (req, res) => {
       });
     }
 
+    // Merge images: keep existing and append new ones (deduplicate)
+    const incomingImages = images ? normalizeImages(images) : [];
+    const mergedImages = Array.from(
+      new Set([...(existing.images || []), ...incomingImages])
+    );
+
     const updated = await prisma.product.update({
       where: { id },
       data: {
@@ -68,7 +74,7 @@ export const updateProduct = async (req, res) => {
         addiInfo: addiInfo ?? existing.addiInfo,
         productPrice: productPrice ?? existing.productPrice,
         catId: catId ?? existing.catId,
-        images: images ? normalizeImages(images) : existing.images,
+        images: mergedImages,
         downloadLink: downloadLink ?? existing.downloadLink,
         isActive: typeof isActive === "boolean" ? isActive : existing.isActive,
       },

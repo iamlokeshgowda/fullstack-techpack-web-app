@@ -173,7 +173,6 @@ export default function AddProductForm({
               headers: {
                 "Content-Type": matchingImage.type,
               },
-              credentials: "include",
               body: matchingImage,
             }).then((r) => {
               if (!r.ok)
@@ -193,7 +192,6 @@ export default function AddProductForm({
               headers: {
                 "Content-Type": downloadFile.type,
               },
-              credentials: "include",
               body: downloadFile,
             }).then((r) => {
               if (!r.ok)
@@ -209,9 +207,10 @@ export default function AddProductForm({
 
       await Promise.all(uploadPromises);
 
-      // merge existing urls when editing and no new uploads provided
-      const finalImages =
-        imageGetUrls.length > 0 ? imageGetUrls : existingImages || [];
+      // merge existing urls when editing with newly uploaded images
+      const finalImages = Array.from(
+        new Set([...(existingImages || []), ...imageGetUrls])
+      );
       const finalDownload = downloadGetUrl || existingDownloadUrl || null;
 
       const submitData = {
