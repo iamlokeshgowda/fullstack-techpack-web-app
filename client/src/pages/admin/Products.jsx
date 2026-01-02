@@ -45,26 +45,26 @@ export default function Products() {
 
   return (
     <AdminLayout>
-      <div className='p-6'>
-        <div className='flex items-center justify-between mb-6'>
-          <h1 className='text-2xl font-semibold'>Products</h1>
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-semibold">Products</h1>
 
-          <div className='flex gap-3'>
+          <div className="flex gap-3">
             <input
-              className='border rounded px-3 py-2 w-64'
-              placeholder='Search products…'
+              className="border rounded px-3 py-2 w-64"
+              placeholder="Search products…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
             <button
               onClick={loadProducts}
-              className='bg-blue-600 text-white px-4 py-2 rounded'
+              className="bg-blue-600 text-white px-4 py-2 rounded"
             >
               Refresh
             </button>
             <button
               onClick={() => setShowAdd(true)}
-              className='bg-green-600 text-white px-4 py-2 rounded'
+              className="bg-green-600 text-white px-4 py-2 rounded"
             >
               Add Product
             </button>
@@ -72,27 +72,27 @@ export default function Products() {
         </div>
 
         {loading && <div>Loading…</div>}
-        {error && <div className='text-red-600'>{error}</div>}
+        {error && <div className="text-red-600">{error}</div>}
 
         {!loading && !error && (
-          <div className='overflow-x-auto border rounded-lg'>
-            <table className='min-w-full'>
-              <thead className='bg-gray-100'>
+          <div className="overflow-x-auto border rounded-lg">
+            <table className="min-w-full">
+              <thead className="bg-gray-100">
                 <tr>
-                  <th className='p-3 text-left'>Image</th>
-                  <th className='p-3 text-left'>Name</th>
-                  <th className='p-3 text-left'>Category</th>
-                  <th className='p-3 text-right'>Price</th>
-                  <th className='p-3 text-center'>Status</th>
-                  <th className='p-3 text-left'>Updated</th>
-                  <th className='p-3 text-right'>Actions</th>
+                  <th className="p-3 text-left">Image</th>
+                  <th className="p-3 text-left">Name</th>
+                  <th className="p-3 text-left">Category</th>
+                  <th className="p-3 text-right">Price</th>
+                  <th className="p-3 text-center">Status</th>
+                  <th className="p-3 text-left">Updated</th>
+                  <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>
 
               <tbody>
                 {filtered.map((product) => (
-                  <tr key={product.id} className='border-t'>
-                    <td className='p-3'>
+                  <tr key={product.id} className="border-t">
+                    <td className="p-3">
                       <img
                         src={
                           product.images && product.images.length
@@ -100,45 +100,56 @@ export default function Products() {
                             : "/no-image.png"
                         }
                         alt={product.productName}
-                        className='w-12 h-12 rounded object-cover border'
+                        className="w-12 h-12 rounded object-cover border"
                       />
+                      {product.metaJson && (
+                        <script
+                          type="application/ld+json"
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              typeof product.metaJson === "string"
+                                ? product.metaJson
+                                : JSON.stringify(product.metaJson),
+                          }}
+                        />
+                      )}
                     </td>
 
-                    <td className='p-3'>
-                      <div className='font-medium'>{product.productName}</div>
-                      <div className='text-sm text-gray-500'>
+                    <td className="p-3">
+                      <div className="font-medium">{product.productName}</div>
+                      <div className="text-sm text-gray-500">
                         {product.productSlug}
                       </div>
                     </td>
 
-                    <td className='p-3 text-sm text-gray-600'>
+                    <td className="p-3 text-sm text-gray-600">
                       {product.categoryPath && product.categoryPath.length
                         ? product.categoryPath
                             .map((c) => c.catName || c.name)
                             .join(" \u203A ")
                         : "-"}
                     </td>
-                    <td className='p-3 text-right font-medium'>
+                    <td className="p-3 text-right font-medium">
                       ₹{Number(product.productPrice).toFixed(2)}
                     </td>
 
-                    <td className='p-3 text-center'>
+                    <td className="p-3 text-center">
                       {product.isActive ? (
-                        <span className='bg-green-100 text-green-700 px-2 py-1 rounded text-sm'>
+                        <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-sm">
                           Active
                         </span>
                       ) : (
-                        <span className='bg-red-100 text-red-700 px-2 py-1 rounded text-sm'>
+                        <span className="bg-red-100 text-red-700 px-2 py-1 rounded text-sm">
                           Inactive
                         </span>
                       )}
                     </td>
 
-                    <td className='p-3 text-sm'>
+                    <td className="p-3 text-sm">
                       {new Date(product.updatedAt).toLocaleString()}
                     </td>
 
-                    <td className='p-3 text-right flex gap-2 justify-end'>
+                    <td className="p-3 text-right flex gap-2 justify-end">
                       {/* <button className="px-3 py-1 border rounded">View</button> */}
                       <button
                         onClick={async () => {
@@ -154,7 +165,7 @@ export default function Products() {
                             setShowAdd(true);
                           }
                         }}
-                        className='px-3 py-1 bg-yellow-500 text-white rounded'
+                        className="px-3 py-1 bg-yellow-500 text-white rounded"
                       >
                         Edit
                       </button>
@@ -171,7 +182,7 @@ export default function Products() {
                             })
                           )
                         }
-                        className='px-3 py-1 bg-red-600 text-white rounded'
+                        className="px-3 py-1 bg-red-600 text-white rounded"
                       >
                         Delete
                       </button>
@@ -181,7 +192,7 @@ export default function Products() {
 
                 {!filtered.length && (
                   <tr>
-                    <td colSpan='7' className='p-6 text-center text-gray-500'>
+                    <td colSpan="7" className="p-6 text-center text-gray-500">
                       No products found
                     </td>
                   </tr>

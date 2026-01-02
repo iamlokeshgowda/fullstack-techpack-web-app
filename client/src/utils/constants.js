@@ -8,6 +8,9 @@ export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
   PROFILE: "/profile",
+  PRODUCT_DETAIL: "/product/:slug",
+  CART: "/cart",
+  CHECKOUT: "/checkout",
 
   // ===== ADMIN =====
   ADMIN_ROOT: "/admin",

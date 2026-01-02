@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { sendResponse } from "../../utils/response.js";
+import { buildCategoryPath } from "../products/product.helper.js";
 
 const prisma = new PrismaClient();
 
@@ -38,6 +39,72 @@ export const getPublicProducts = async (req, res) => {
       statusCode: 500,
       success: false,
       message: "Failed to fetch products",
+      error: error.message,
+    });
+  }
+};
+
+export const getPublicProductBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const product = await prisma.product.findUnique({
+      where: { productSlug: slug },
+      select: {
+        id: true,
+        productSlug: true,
+        productName: true,
+        metaDesc: true,
+        metaKeyword: true,
+        metaJson: true,
+        shortDescription: true,
+        longDescription: true,
+        addiInfo: true,
+        productPrice: true,
+        images: true,
+        downloadLink: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+        category: {
+          select: {
+            id: true,
+            catName: true,
+            catSlug: true,
+            parentId: true,
+          },
+        },
+      },
+    });
+
+    if (!product) {
+      return sendResponse(res, {
+        statusCode: 404,
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    // Build category path
+    const categoryPath = product.category
+      ? await buildCategoryPath(product.category)
+      : [];
+
+    const formattedProduct = {
+      ...product,
+      categoryPath,
+    };
+
+    return sendResponse(res, {
+      message: "Product fetched successfully",
+      data: formattedProduct,
+    });
+  } catch (error) {
+    console.error("GET PRODUCT BY SLUG ERROR:", error);
+    return sendResponse(res, {
+      statusCode: 500,
+      success: false,
+      message: "Failed to fetch product",
       error: error.message,
     });
   }
