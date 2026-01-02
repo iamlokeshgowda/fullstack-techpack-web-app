@@ -71,10 +71,18 @@ export const googleLogin = async (req, res) => {
 
     return res.json({
       user: {
-        id: user.id,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        name: user.firstName + " " + user.lastName,
         email: user.email,
+        id: user.id,
         role: user.role,
+        phone: user.phone,
+        address: user.address,
+        city: user.city,
+        state: user.state,
+        zipCode: user.zipCode,
+        country: user.country,
       },
       accessToken,
       refreshToken,

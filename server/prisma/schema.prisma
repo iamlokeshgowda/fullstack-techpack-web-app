@@ -37,6 +37,14 @@ enum EmailTokenType {
 model User {
   id              String       @id @default(uuid())
   name            String
+  firstName       String?
+  lastName        String?
+  phone           String?
+  address         String?
+  city            String?
+  state           String?
+  zipCode         String?
+  country         String?
   email           String       @unique
   password        String?
   role            Role         @default(USER)
@@ -52,6 +60,8 @@ model User {
   refreshTokens     RefreshToken[]
   sessions          Session[]
   emailTokens       EmailToken[]
+  cartItems         CartItem[]
+  orders            Order[]
 }
 
 model PasswordHistory {
@@ -158,4 +168,70 @@ model Product {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model CartItem {
+  id String @id @default(uuid())
+
+  userId    String
+  productId String
+  quantity  Int    @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  userId      String
+  orderNumber String @unique
+
+  // Customer info snapshot
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+
+  // Shipping address snapshot
+  address String
+  city    String
+  state   String?
+  zipCode String
+  country String?
+
+  // Order totals
+  subtotal Decimal @db.Decimal(10, 2)
+  tax      Decimal @db.Decimal(10, 2)
+  total    Decimal @db.Decimal(10, 2)
+
+  status String @default("pending") // pending, confirmed, shipped, delivered
+
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+
+  orderId      String
+  productId    String
+  productName  String
+  productSlug  String
+  productPrice Decimal @db.Decimal(10, 2)
+  quantity     Int
+  downloadLink String? // Link to the downloadable zip file for this product
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }

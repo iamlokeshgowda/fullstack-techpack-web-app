@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { authStart, authSuccess, authFailure } from "../store/slices/authSlice";
+import { setCartFromServer } from "../store/slices/cartSlice";
 import api from "../services/axios";
 import { SERVER_ROUTES } from "../utils/constants";
 import toast from "react-hot-toast";
@@ -22,6 +23,35 @@ export default function LoginModal({ open, onClose, onSuccess }) {
       dispatch(authStart());
       const res = await api.post(SERVER_ROUTES.AUTH_LOGIN, { email, password });
       dispatch(authSuccess(res.data));
+      // fetch server cart and set local cart
+      try {
+        const cartRes = await api.get(SERVER_ROUTES.USER_CART);
+        const serverItems = cartRes.data?.data || [];
+
+        // merge local cart into server: post local-only items then refresh
+        const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+        const serverMap = new Set(serverItems.map((it) => it.productId));
+
+        for (const localItem of localCart) {
+          if (!serverMap.has(localItem.id)) {
+            try {
+              await api.post(SERVER_ROUTES.USER_CART, {
+                productId: localItem.id,
+                quantity: localItem.quantity,
+              });
+            } catch (e) {
+              console.error("Failed to push local cart item to server", e);
+            }
+          }
+        }
+
+        // fetch merged server cart and set local store
+        const refreshed = await api.get(SERVER_ROUTES.USER_CART);
+        if (refreshed.data?.data)
+          dispatch(setCartFromServer(refreshed.data.data));
+      } catch (err) {
+        console.error("Failed to sync cart after login", err);
+      }
       toast.success("Login successful");
       onClose();
       if (onSuccess) onSuccess();

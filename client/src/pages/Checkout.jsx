@@ -1,30 +1,45 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { clearCart } from "../store/slices/cartSlice";
 import { ROUTES } from "../utils/constants";
 import toast from "react-hot-toast";
+import axiosInstance from "../services/axios";
 
 export default function Checkout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
   const user = useSelector((state) => state.auth.user);
+  const { products } = useSelector((state) => state.public);
   const [loading, setLoading] = useState(false);
+
+  // Merge cart items with product details from Redux store
+  const detailedCartaItem = cartItems.map((item) => {
+    console.log("Cart Item:", products);
+    const product = products.data.find((p) => p.id === item.id);
+    return {
+      ...item,
+      productName: product ? product.productName : "Unknown Product",
+      productSlug: product ? product.productSlug : "",
+      productPrice: product ? product.productPrice : 0,
+      images: product ? product.images : [],
+    };
+  });
 
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
     email: user?.email || "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    country: "",
+    phone: user?.phone || "",
+    address: user?.address || "",
+    city: user?.city || "",
+    state: user?.state || "",
+    zipCode: user?.zipCode || "",
+    country: user?.country || "",
   });
 
-  const subtotal = cartItems.reduce(
+  const subtotal = detailedCartaItem.reduce(
     (sum, item) => sum + item.productPrice * item.quantity,
     0
   );
@@ -61,9 +76,9 @@ export default function Checkout() {
     try {
       setLoading(true);
 
-      // Simulate order placement (replace with actual API call)
       const orderData = {
-        customer: {
+        items: detailedCartaItem,
+        customerInfo: {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
@@ -76,27 +91,22 @@ export default function Checkout() {
           zipCode: formData.zipCode,
           country: formData.country,
         },
-        items: cartItems,
         subtotal,
         tax,
         total,
-        orderDate: new Date().toISOString(),
       };
 
-      // Save order to localStorage (for demo purposes)
-      const orders = JSON.parse(localStorage.getItem("orders")) || [];
-      orders.push(orderData);
-      localStorage.setItem("orders", JSON.stringify(orders));
+      const response = await axiosInstance.post("/orders", orderData);
 
       toast.success("Order placed successfully!");
       dispatch(clearCart());
 
-      // Redirect to success page or home
+      // Redirect to my orders page
       setTimeout(() => {
-        navigate(ROUTES.HOME);
+        navigate(ROUTES.MY_ORDERS);
       }, 1500);
     } catch (err) {
-      toast.error("Failed to place order");
+      toast.error(err.response?.data?.message || "Failed to place order");
       console.error(err);
     } finally {
       setLoading(false);
@@ -256,7 +266,7 @@ export default function Checkout() {
             </h2>
 
             <div className="space-y-3 mb-6 max-h-96 overflow-y-auto">
-              {cartItems.map((item) => (
+              {detailedCartaItem.map((item) => (
                 <div
                   key={item.id}
                   className="flex justify-between text-sm text-gray-700 pb-2 border-b"

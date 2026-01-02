@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ROUTES } from "../utils/constants";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/slices/authSlice";
+import { clearCart } from "../store/slices/cartSlice";
 import {
   getPublicCategories,
   getPublicProducts,
@@ -32,6 +33,7 @@ export default function AppHeader() {
 
   const handleLogout = () => {
     dispatch(logout());
+    dispatch(clearCart());
   };
 
   return (
@@ -154,7 +156,10 @@ export default function AppHeader() {
                         My Account
                       </Link>
 
-                      <Link to="/orders" className="hover:text-blue-600 w-full">
+                      <Link
+                        to={ROUTES.MY_ORDERS}
+                        className="hover:text-blue-600 w-full"
+                      >
                         My Orders
                       </Link>
 

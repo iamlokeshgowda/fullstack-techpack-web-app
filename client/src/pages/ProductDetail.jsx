@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
 import api from "../services/axios";
-import { ROUTES } from "../utils/constants";
+import { ROUTES, SERVER_ROUTES } from "../utils/constants";
 import { addToCart } from "../store/slices/cartSlice";
 import toast from "react-hot-toast";
 import LoginModal from "../components/LoginModal";
@@ -169,6 +169,19 @@ export default function ProductDetail() {
     );
     toast.success(`${product.productName} added to cart!`);
     setQuantity(1);
+    // persist to server when user is authenticated
+    if (isAuthenticated) {
+      (async () => {
+        try {
+          await api.post(SERVER_ROUTES.USER_CART, {
+            productId: product.id,
+            quantity,
+          });
+        } catch (err) {
+          console.error("Failed to persist cart to server", err);
+        }
+      })();
+    }
   };
 
   const handleBuyNow = () => {
@@ -187,6 +200,19 @@ export default function ProductDetail() {
         quantity,
       })
     );
+    // persist to server
+    if (isAuthenticated) {
+      (async () => {
+        try {
+          await api.post(SERVER_ROUTES.USER_CART, {
+            productId: product.id,
+            quantity,
+          });
+        } catch (err) {
+          console.error("Failed to persist cart to server", err);
+        }
+      })();
+    }
     navigate(ROUTES.CHECKOUT);
   };
 
@@ -202,6 +228,17 @@ export default function ProductDetail() {
         quantity,
       })
     );
+    // For modal login flow, persist to server as well (token now present)
+    (async () => {
+      try {
+        await api.post(SERVER_ROUTES.USER_CART, {
+          productId: product.id,
+          quantity,
+        });
+      } catch (err) {
+        console.error("Failed to persist cart after login", err);
+      }
+    })();
     setShowLogin(false);
     navigate(ROUTES.CHECKOUT);
   };
