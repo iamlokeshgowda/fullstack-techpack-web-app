@@ -43,7 +43,6 @@ export default async function createOrder(req, res) {
             productSlug: item.productSlug,
             productPrice: parseFloat(item.productPrice),
             quantity: item.quantity,
-            downloadLink: item.downloadLink,
           })),
         },
       },
