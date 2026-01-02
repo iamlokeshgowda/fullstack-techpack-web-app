@@ -5,6 +5,7 @@ import authReducer from "./slices/authSlice";
 import pubicReducer from "./slices/public/publicSlice";
 import adminReducer from "./slices/admin/adminSlice";
 import confirmDialogReducer from "./slices/ui/confirmDialogSlice";
+import cartReducer from "./slices/cartSlice";
 
 // Combine reducers
 const rootReducer = combineReducers({
@@ -12,13 +13,14 @@ const rootReducer = combineReducers({
   admin: adminReducer,
   public: pubicReducer,
   confirmDialog: confirmDialogReducer,
+  cart: cartReducer,
 });
 
 // Persist config
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth"], // reducers to persist (store only auth if you want)
+  whitelist: ["auth", "cart"], // persist auth and cart
 };
 
 // Create persisted reducer
