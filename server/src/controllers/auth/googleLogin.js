@@ -19,7 +19,14 @@ export const googleLogin = async (req, res) => {
     });
 
     const payload = ticket.getPayload();
-    const { email, name, email_verified, sub: googleId } = payload;
+    const {
+      email,
+      name,
+      email_verified,
+      given_name: firstName,
+      family_name: lastName,
+      sub: googleId,
+    } = payload;
 
     if (!email_verified) {
       return res.status(403).json({ message: "Google email not verified" });
@@ -48,6 +55,8 @@ export const googleLogin = async (req, res) => {
           googleId,
           provider: "GOOGLE",
           isEmailVerified: true,
+          firstName,
+          lastName,
         },
       });
     }

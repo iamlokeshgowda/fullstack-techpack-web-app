@@ -4,8 +4,6 @@ import { sendResponse } from "../../utils/response.js";
 const prisma = new PrismaClient();
 
 export const addToCart = async (req, res) => {
-  console.log("req.....", req.body);
-
   try {
     const userId = req.user?.userId;
     if (!userId)
