@@ -13,6 +13,7 @@ import Home from "../pages/Home";
 import ProductDetail from "../pages/ProductDetail";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
+import MyOrders from "../pages/MyOrders";
 
 import { ROUTES } from "../utils/constants";
 import Unauthorized from "../pages/Unauthorized";
@@ -33,6 +34,7 @@ const AppRoutes = () => {
         <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
         <Route path={ROUTES.PROFILE} element={<Profile />} />
         <Route path={ROUTES.CHECKOUT} element={<Checkout />} />
+        <Route path={ROUTES.MY_ORDERS} element={<MyOrders />} />
       </Route>
 
       {/* ADMIN Routes */}

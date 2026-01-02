@@ -6,6 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
 import { SERVER_ROUTES, ROUTES } from "../utils/constants";
+import { setCartFromServer } from "../store/slices/cartSlice";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -34,6 +35,33 @@ export default function Login() {
     try {
       const res = await api.post(SERVER_ROUTES.AUTH_LOGIN, { email, password });
       dispatch(authSuccess(res.data));
+      // sync/merge local cart into server then refresh
+      try {
+        const cartRes = await api.get(SERVER_ROUTES.USER_CART);
+        const serverItems = cartRes.data?.data || [];
+        const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+        const serverMap = new Set(serverItems.map((it) => it.productId));
+
+        for (const localItem of localCart) {
+          if (!serverMap.has(localItem.id)) {
+            try {
+              await api.post(SERVER_ROUTES.USER_CART, {
+                productId: localItem.id,
+                quantity: localItem.quantity,
+              });
+            } catch (e) {
+              console.error("Failed to push local cart item to server", e);
+            }
+          }
+        }
+
+        const refreshed = await api.get(SERVER_ROUTES.USER_CART);
+        if (refreshed.data?.data) {
+          dispatch(setCartFromServer(refreshed.data.data));
+        }
+      } catch (err) {
+        console.error("Failed to sync cart after login", err);
+      }
       toast.success("Login successful");
       //TODO: Redirect based on role
       navigate(ROUTES.DASHBOARD);
@@ -52,6 +80,33 @@ export default function Login() {
         idToken: credential,
       });
       dispatch(authSuccess(res.data));
+      // sync/merge local cart into server then refresh
+      try {
+        const cartRes = await api.get(SERVER_ROUTES.USER_CART);
+        const serverItems = cartRes.data?.data || [];
+        const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+        const serverMap = new Set(serverItems.map((it) => it.productId));
+
+        for (const localItem of localCart) {
+          if (!serverMap.has(localItem.id)) {
+            try {
+              await api.post(SERVER_ROUTES.USER_CART, {
+                productId: localItem.id,
+                quantity: localItem.quantity,
+              });
+            } catch (e) {
+              console.error("Failed to push local cart item to server", e);
+            }
+          }
+        }
+
+        const refreshed = await api.get(SERVER_ROUTES.USER_CART);
+        if (refreshed.data?.data) {
+          dispatch(setCartFromServer(refreshed.data.data));
+        }
+      } catch (err) {
+        console.error("Failed to sync cart after google login", err);
+      }
       toast.success("Logged in with Google");
       //TODO: Redirect based on role
       navigate(ROUTES.DASHBOARD);

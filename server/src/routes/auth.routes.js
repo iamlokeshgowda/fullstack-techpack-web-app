@@ -4,6 +4,9 @@ import { verifyEmailToken } from "../controllers/auth/verifyEmailToken.js";
 import { resendVerificationEmail } from "../controllers/auth/reVerifyEmailToken.js";
 import { manualLogin } from "../controllers/auth/login.js";
 import { googleLogin } from "../controllers/auth/googleLogin.js";
+import { authorize } from "../middlewares/auth.middleware.js";
+import { getProfile } from "../controllers/auth/getProfile.js";
+import { updateProfile } from "../controllers/auth/updateProfile.js";
 
 const router = Router();
 
@@ -12,5 +15,7 @@ router.get("/verify-email/:token", verifyEmailToken);
 router.post("/resend-verification", resendVerificationEmail);
 router.post("/login", manualLogin);
 router.post("/google", googleLogin);
+router.get("/profile", authorize(), getProfile);
+router.patch("/profile", authorize(), updateProfile);
 
 export default router;

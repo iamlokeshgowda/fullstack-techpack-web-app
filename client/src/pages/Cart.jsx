@@ -14,15 +14,27 @@ import toast from "react-hot-toast";
 export default function Cart() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { products } = useSelector((state) => state.public);
   const cartItems = useSelector((state) => state.cart.items);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [showLogin, setShowLogin] = useState(false);
+  const detailedCartaItem = cartItems.map((item) => {
+    console.log("Cart Item:", products);
+    const product = products.data.find((p) => p.id === item.id);
+    return {
+      ...item,
+      productName: product ? product.productName : "Unknown Product",
+      productSlug: product ? product.productSlug : "",
+      productPrice: product ? product.productPrice : 0,
+      images: product ? product.images : [],
+    };
+  });
 
-  const subtotal = cartItems.reduce(
+  const subtotal = detailedCartaItem.reduce(
     (sum, item) => sum + item.productPrice * item.quantity,
     0
   );
-  const tax = subtotal * 0.1; // 10% tax
+  const tax = subtotal * 0.1;
   const total = subtotal + tax;
 
   const handleRemove = (id) => {
@@ -48,7 +60,7 @@ export default function Cart() {
     navigate(ROUTES.CHECKOUT);
   };
 
-  if (cartItems.length === 0) {
+  if (detailedCartaItem.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4 bg-gray-50">
         <h1 className="text-3xl font-bold text-gray-900">Your Cart is Empty</h1>
@@ -81,7 +93,7 @@ export default function Cart() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
-            {cartItems.map((item) => (
+            {detailedCartaItem.map((item) => (
               <div
                 key={item.id}
                 className="bg-white rounded-lg p-6 flex gap-4 items-start border"
