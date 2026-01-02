@@ -6,12 +6,12 @@ export default function Home() {
 
   return (
     <div className='p-6 max-w-7xl mx-auto'>
-      <h1 className='text-2xl font-bold mb-6'>Latest Products</h1>
+      <h1 className='text-2xl font-bold mb-6'>New Arrival</h1>
 
       {products.status === "loading" && <p>Loading...</p>}
       {products.status === "failed" && <p>Failed to load products.</p>}
       {products.status === "succeeded" && (
-        <ProductGrid products={products.data} />
+        <ProductGrid products={products.data.slice(0, 6)} />
       )}
     </div>
   );
