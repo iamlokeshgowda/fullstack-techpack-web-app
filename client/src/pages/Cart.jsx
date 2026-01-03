@@ -7,7 +7,8 @@ import {
   updateQuantity,
   clearCart,
 } from "../store/slices/cartSlice";
-import { ROUTES } from "../utils/constants";
+import { ROUTES, SERVER_ROUTES } from "../utils/constants";
+import api from "../services/axios";
 import LoginModal from "../components/LoginModal";
 import toast from "react-hot-toast";
 
@@ -19,8 +20,7 @@ export default function Cart() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [showLogin, setShowLogin] = useState(false);
   const detailedCartaItem = cartItems.map((item) => {
-    console.log("Cart Item:", products);
-    const product = products.data.find((p) => p.id === item.id);
+    const product = products.data?.find((p) => p.id === item.id);
     return {
       ...item,
       productName: product ? product.productName : "Unknown Product",
@@ -193,8 +193,21 @@ export default function Cart() {
 
             <button
               onClick={() => {
-                dispatch(clearCart());
-                toast.success("Cart cleared");
+                if (isAuthenticated) {
+                  (async () => {
+                    try {
+                      await api.delete(`${SERVER_ROUTES.USER_CART}`);
+                      dispatch(clearCart());
+                      toast.success("Cart cleared");
+                    } catch (err) {
+                      console.error("Failed to clear cart on server", err);
+                      toast.error("Failed to clear cart on server");
+                    }
+                  })();
+                } else {
+                  dispatch(clearCart());
+                  toast.success("Cart cleared");
+                }
               }}
               className="w-full bg-red-100 text-red-600 py-2 rounded-lg font-semibold hover:bg-red-200 transition"
             >

@@ -11,6 +11,7 @@ export default function MyOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
+  const [downloadingItemId, setDownloadingItemId] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -30,20 +31,19 @@ export default function MyOrders() {
   };
 
   const handleDownloadZip = async (orderItem) => {
-    if (!orderItem.downloadLink) {
-      toast.error("No download available for this product");
-      return;
-    }
-
     try {
-      ordersService.downloadFile(
-        orderItem.downloadLink,
+      setDownloadingItemId(orderItem.id);
+      toast.success("Download started!");
+      await ordersService.downloadFile(
+        orderItem.id,
         `${orderItem.productSlug}.zip`
       );
-      toast.success("Download started!");
+      toast.success("Download completed!");
     } catch (error) {
       toast.error("Failed to download file");
       console.error(error);
+    } finally {
+      setDownloadingItemId(null);
     }
   };
 
@@ -237,13 +237,31 @@ export default function MyOrders() {
                                 ).toFixed(2)}
                               </p>
                             </div>
-                            {item.downloadLink && (
+                            <div>
+                              <span className="text-sm text-gray-600">
+                                Downloads: {item.downloadItemCount}
+                              </span>
+                            </div>
+
+                            {item.downloadItemCount < 5 ? (
                               <button
                                 onClick={() => handleDownloadZip(item)}
-                                className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition text-sm"
+                                disabled={downloadingItemId === item.id}
+                                className={`px-4 py-2 rounded-lg font-semibold text-sm transition
+                                  ${
+                                    downloadingItemId === item.id
+                                      ? "bg-gray-400 cursor-not-allowed"
+                                      : "bg-blue-600 hover:bg-blue-700 text-white"
+                                  }`}
                               >
-                                📥 Download Zip
+                                {downloadingItemId === item.id
+                                  ? "Downloading…"
+                                  : "📥 Download Zip"}
                               </button>
+                            ) : (
+                              <div className="text-red-600 font-semibold">
+                                Download limit reached
+                              </div>
                             )}
                           </div>
                         ))}

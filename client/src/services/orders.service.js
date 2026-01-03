@@ -20,14 +20,22 @@ export const ordersService = {
   },
 
   // Download file from URL
-  downloadFile: (url, filename) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.target = "_blank";
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // Download an order item's file via server proxy so the real URL is hidden
+  downloadFile: async (orderItemId, filename) => {
+    const res = await axiosInstance.get(
+      `/orders/order-items/${orderItemId}/download`,
+      { responseType: "blob" }
+    );
+
+    const blob = new Blob([res.data]);
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+
+    window.URL.revokeObjectURL(url);
   },
 };
 
