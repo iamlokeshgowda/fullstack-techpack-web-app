@@ -193,6 +193,14 @@ model Order {
 
   userId      String
   orderNumber String @unique
+  paypalOrderId String @unique
+
+  paidAt         DateTime?
+  transactionId  String?
+  paidAmount     Float?
+  currency       String?
+  payerEmail     String?
+
 
   // Customer info snapshot
   firstName String
@@ -227,8 +235,6 @@ model OrderItem {
 
   orderId      String
   productId    String
-  productName  String
-  productSlug  String
   productPrice Decimal @db.Decimal(10, 2)
   quantity     Int
   downloadLink String? // Link to the downloadable zip file for this product

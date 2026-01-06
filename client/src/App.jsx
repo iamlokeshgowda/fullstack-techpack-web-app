@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import api from "./services/axios";
 import { SERVER_ROUTES } from "./utils/constants";
 import { setCartFromServer } from "./store/slices/cartSlice";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
+const paypalClientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
 function App() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((s) => s.auth.isAuthenticated);
@@ -28,10 +30,16 @@ function App() {
 
   return (
     <>
-      <AppLayout>
-        <AppRoutes />
-      </AppLayout>
-      <ConfirmDialog />
+      <PayPalScriptProvider
+        options={{
+          "client-id": paypalClientId,
+        }}
+      >
+        <AppLayout>
+          <AppRoutes />
+        </AppLayout>
+        <ConfirmDialog />
+      </PayPalScriptProvider>
     </>
   );
 }

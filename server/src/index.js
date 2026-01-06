@@ -8,6 +8,7 @@ import s3Routes from "./routes/s3.routes.js";
 import publicRoutes from "./routes/public.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import ordersRoutes from "./routes/orders.routes.js";
+import paypalRoutes from "./routes/paypal.routes.js";
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.use("/api/admin/s3", s3Routes);
 app.use("/api/public", publicRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/orders", ordersRoutes);
+app.use("/api/paypal", paypalRoutes);
 
 // start server
 const PORT = process.env.PORT || 5000;

@@ -36,4 +36,8 @@ export const SERVER_ROUTES = {
   PUBLIC_PRODUCTS: "/public/products",
   PUBLIC_PRODUCT_BY_SLUG: "/public/product",
   USER_CART: "/user/cart",
+
+  //=============Paypal ==========
+  CREATE_ORDER: "/paypal/create-order",
+  CAPTURE_ORDER: "/paypal/capture-order",
 };

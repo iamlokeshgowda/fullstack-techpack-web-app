@@ -10,11 +10,11 @@ import App from "./App";
 import "./index.css";
 import { PersistGate } from "redux-persist/integration/react";
 
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <GoogleOAuthProvider
-      clientId={`142669272142-pbat5d7mll570iha9oevl159punbtbg9.apps.googleusercontent.com`}
-    >
+    <GoogleOAuthProvider clientId={googleClientId}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <BrowserRouter>

@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default async function createOrder(req, res) {
+export default async function createOrder() {
   try {
     const { items, customerInfo, shippingAddress, subtotal, tax, total } =
       req.body;
