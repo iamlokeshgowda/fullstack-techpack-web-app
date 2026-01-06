@@ -93,7 +93,6 @@ export async function createPaypalOrder(req, res) {
         },
       },
     });
-    console.log("paypalResponse.data.id", paypalResponse.data.id);
     res.json({ id: paypalResponse.data.id });
   } catch (error) {
     console.error("Create PayPal Order Error:", error.message);

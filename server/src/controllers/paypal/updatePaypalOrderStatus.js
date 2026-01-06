@@ -2,7 +2,6 @@ import prisma from "../../config/prisma.js";
 
 export async function updatePaypalOrderStatus(req, res) {
   const { orderID, status } = req.body;
-  console.log();
   if (!orderID || !status) {
     return res.status(400).json({ message: "orderID and status are required" });
   }
