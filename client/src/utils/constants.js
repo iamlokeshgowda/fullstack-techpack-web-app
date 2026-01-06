@@ -11,6 +11,7 @@ export const ROUTES = {
   PRODUCT_DETAIL: "/product/:slug",
   CART: "/cart",
   CHECKOUT: "/checkout",
+  CATEGROY_PRODUCTS: "/category/:slug",
   MY_ORDERS: "/my-orders",
 
   // ===== ADMIN =====
@@ -33,5 +34,6 @@ export const SERVER_ROUTES = {
   // ===== PUBLIC =====
   PUBLIC_CATEGORIES: "/public/categories",
   PUBLIC_PRODUCTS: "/public/products",
+  PUBLIC_PRODUCT_BY_SLUG: "/public/product",
   USER_CART: "/user/cart",
 };

@@ -12,22 +12,16 @@ export const getPublicProducts = async (req, res) => {
         productSlug: true,
         productName: true,
         productPrice: true,
-        isActive: true,
+        shortDescription: true,
         updatedAt: true,
-        images: true, // <-- get full array
+        images: true,
         category: {
-          select: { id: true },
+          select: { id: true, catSlug: true },
         },
       },
       where: { isActive: true },
       orderBy: { updatedAt: "desc" },
     });
-
-    // 🔥 transform to return only first image (or empty string)
-    products = products.map((item) => ({
-      ...item,
-      category: item.category.id,
-    }));
 
     return sendResponse(res, {
       message: "Products fetched successfully",
@@ -85,14 +79,8 @@ export const getPublicProductBySlug = async (req, res) => {
       });
     }
 
-    // Build category path
-    const categoryPath = product.category
-      ? await buildCategoryPath(product.category)
-      : [];
-
     const formattedProduct = {
       ...product,
-      categoryPath,
     };
 
     return sendResponse(res, {

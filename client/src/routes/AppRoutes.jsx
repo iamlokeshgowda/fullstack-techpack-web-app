@@ -18,6 +18,7 @@ import MyOrders from "../pages/MyOrders";
 import { ROUTES } from "../utils/constants";
 import Unauthorized from "../pages/Unauthorized";
 import Products from "../pages/admin/Products";
+import CategoryRelatedProducts from "../pages/CategoryRelatedProducts";
 
 const AppRoutes = () => {
   return (
@@ -26,7 +27,11 @@ const AppRoutes = () => {
       <Route path={ROUTES.LOGIN} element={<Login />} />
       <Route path={ROUTES.REGISTER} element={<Register />} />
       <Route path={ROUTES.HOME} element={<Home />} />
-      <Route path="/product/:slug" element={<ProductDetail />} />
+      <Route path={ROUTES.PRODUCT_DETAIL} element={<ProductDetail />} />
+      <Route
+        path={ROUTES.CATEGROY_PRODUCTS}
+        element={<CategoryRelatedProducts />}
+      />
       <Route path={ROUTES.CART} element={<Cart />} />
 
       {/* USER Protected Routes */}
@@ -46,7 +51,7 @@ const AppRoutes = () => {
 
       {/* Fallback */}
       <Route path={ROUTES.UNAUTHORIZED} element={<Unauthorized />} />
-      <Route path="*" element={<NotFound />} />
+      <Route path='*' element={<NotFound />} />
     </Routes>
   );
 };

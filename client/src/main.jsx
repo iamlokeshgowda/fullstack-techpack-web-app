@@ -19,9 +19,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <PersistGate loading={null} persistor={persistor}>
           <BrowserRouter>
             <App />
-            {/* Global Toasts */}
             <Toaster
-              position='top-right'
+              position='top-center'
               toastOptions={{
                 duration: 3000,
                 style: { fontSize: "14px" },
