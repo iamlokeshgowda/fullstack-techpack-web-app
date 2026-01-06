@@ -14,7 +14,7 @@ export default function Checkout() {
   const user = useSelector((state) => state.auth.user);
   const { products } = useSelector((state) => state.public);
   const [loading, setLoading] = useState(false);
-
+  const [paypalOrderId, setPaypalOrderId] = useState(null);
   // Merge cart items with product details from Redux store
   const detailedCartaItem = cartItems.map((item) => {
     const product = products.data.find((p) => p.id === item.id);
@@ -205,7 +205,7 @@ export default function Checkout() {
                       tax,
                       totalAmount,
                     });
-
+                    setPaypalOrderId(res.data.id);
                     return res.data.id;
                   } catch (err) {
                     console.error(
@@ -234,12 +234,20 @@ export default function Checkout() {
                     );
                   }
                 }}
-                onCancel={(data) => {
-                  console.log("Payment cancelled:", data);
+                onCancel={async () => {
+                  await api.post(SERVER_ROUTES.UPDATE_STATUS, {
+                    orderID: paypalOrderId,
+                    status: "cancelled",
+                  });
+
                   toast("Payment cancelled");
                 }}
-                onError={(err) => {
-                  console.error("PayPal error:", err);
+                onError={async () => {
+                  await api.post(SERVER_ROUTES.UPDATE_STATUS, {
+                    orderID: paypalOrderId,
+                    status: "failed",
+                  });
+
                   toast.error("Payment failed");
                 }}
               />

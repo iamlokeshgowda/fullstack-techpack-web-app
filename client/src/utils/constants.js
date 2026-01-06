@@ -40,4 +40,7 @@ export const SERVER_ROUTES = {
   //=============Paypal ==========
   CREATE_ORDER: "/paypal/create-order",
   CAPTURE_ORDER: "/paypal/capture-order",
+  CANCEL_ORDER: "/paypal/cancel",
+  CANCEL_ORDER: "/paypal/fail",
+  UPDATE_STATUS: "/paypal/update-status",
 };
