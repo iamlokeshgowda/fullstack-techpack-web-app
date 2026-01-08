@@ -20,6 +20,7 @@ import { ROUTES } from "../utils/constants";
 import Unauthorized from "../pages/Unauthorized";
 import Products from "../pages/admin/Products";
 import CategoryRelatedProducts from "../pages/CategoryRelatedProducts";
+import VerifyEmail from "../pages/auth/VerifyEmail";
 
 const AppRoutes = () => {
   return (
@@ -34,6 +35,7 @@ const AppRoutes = () => {
         element={<CategoryRelatedProducts />}
       />
       <Route path={ROUTES.CART} element={<Cart />} />
+      <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmail />} />
 
       {/* USER Protected Routes */}
       <Route element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}>
