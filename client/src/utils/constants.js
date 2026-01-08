@@ -14,6 +14,7 @@ export const ROUTES = {
   CHECKOUT: "/checkout",
   CATEGROY_PRODUCTS: "/category/:slug",
   MY_ORDERS: "/my-orders",
+  VERIFY_EMAIL: "/verify-email/:token",
 
   // ===== ADMIN =====
   ADMIN_ROOT: "/admin",
@@ -27,6 +28,8 @@ export const SERVER_ROUTES = {
   AUTH_REGISTER: "/auth/register",
   AUTH_GOOGLE: "/auth/google",
   AUTH_PROFILE: "/auth/profile",
+  AUTH_VERIFY_EMAIL: "/auth/verify-email",
+  AUTH_REVERIFY_EMAIL: "/auth/resend-verification",
 
   // ===== CATEGORIES =====
   CATEGORIES: "/admin/categories",

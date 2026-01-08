@@ -14,7 +14,7 @@ export const resendVerificationEmail = async (req, res) => {
 
     if (!user) {
       return res.json({
-        message: "If account exists, verification email sent",
+        message: "If account doesn't exists, verification email won't be sent",
       });
     }
 
@@ -46,7 +46,7 @@ export const resendVerificationEmail = async (req, res) => {
       },
     });
 
-    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${newToken}`;
+    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email/${newToken}`;
 
     await sendVerificationEmail(user.email, verifyUrl);
 

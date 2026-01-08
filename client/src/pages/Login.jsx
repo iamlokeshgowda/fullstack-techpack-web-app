@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authStart, authSuccess, authFailure } from "../store/slices/authSlice";
 import api from "../services/axios";
@@ -12,6 +12,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorCode, setErrorCode] = useState(null);
+  const [resentStatus, setResentStatus] = useState(false);
 
   const { loading, error } = useSelector((s) => s.auth);
   const dispatch = useDispatch();
@@ -24,6 +25,10 @@ export default function Login() {
     }
     return true;
   };
+
+  useEffect(() => {
+    dispatch(authFailure());
+  }, [dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -116,6 +121,17 @@ export default function Login() {
     }
   };
 
+  const resendVerificationMailHandler = async () => {
+    try {
+      await api.post(SERVER_ROUTES.AUTH_REVERIFY_EMAIL, { email });
+      toast.success("Verification email resent successfully");
+      setResentStatus(true);
+    } catch (err) {
+      console.error("Failed to resend verification email", err);
+      toast.error("Failed to resend verification email");
+    }
+  };
+
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
       <div className="hidden lg:flex flex-col justify-center px-16 bg-gradient-to-br from-emerald-600 to-emerald-800 text-white">
@@ -148,7 +164,26 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-sm mb-3">
+              {error}
+              {errorCode === "EMAIL_NOT_VERIFIED" && !resentStatus ? (
+                <button
+                  onClick={resendVerificationMailHandler}
+                  className="ml-2 text-emerald-600 hover:underline"
+                >
+                  Resend verification email
+                </button>
+              ) : (
+                errorCode === "EMAIL_NOT_VERIFIED" &&
+                resentStatus && (
+                  <span className="ml-2 text-green-600 ">
+                    Verification email has been resent. please verify.
+                  </span>
+                )
+              )}
+            </p>
+          )}
 
           <button
             disabled={loading}

@@ -39,7 +39,7 @@ export const register = async (req, res) => {
       },
     });
 
-    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email/${token}`;
 
     await sendVerificationEmail(email, verifyUrl);
 
