@@ -4,6 +4,7 @@ import createOrder from "../controllers/orders/createOrder.js";
 import getUserOrders from "../controllers/orders/getUserOrders.js";
 import getOrderById from "../controllers/orders/getOrderById.js";
 import downloadOrderItem from "../controllers/orders/downloadOrderItem.js";
+import { getAllOrdersGroupedByUser } from "../controllers/orders/getAllOrdersGroupedByUser .js";
 
 const router = Router();
 
@@ -21,5 +22,7 @@ router.get("/:orderId", getOrderById);
 
 // Download an order item's product zip (proxied)
 router.get("/order-items/:id/download", downloadOrderItem);
+
+router.get("/admin/dashboard", authorize("ADMIN"), getAllOrdersGroupedByUser);
 
 export default router;

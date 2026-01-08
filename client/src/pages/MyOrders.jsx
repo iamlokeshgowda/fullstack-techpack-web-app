@@ -36,7 +36,7 @@ export default function MyOrders() {
       toast.success("Download started!");
       await ordersService.downloadFile(
         orderItem.id,
-        `${orderItem.productSlug}.zip`
+        `${orderItem.product.productSlug}.zip`
       );
       toast.success("Download completed!");
     } catch (error) {
@@ -227,7 +227,7 @@ export default function MyOrders() {
                           >
                             <div>
                               <p className="font-semibold text-gray-900">
-                                {item.productName}
+                                {item?.product.productName}
                               </p>
                               <p className="text-sm text-gray-600">
                                 Qty: {item.quantity} × $

@@ -64,7 +64,7 @@ export default function Login() {
       }
       toast.success("Login successful");
       //TODO: Redirect based on role
-      navigate(ROUTES.DASHBOARD);
+      navigate(ROUTES.HOME);
     } catch (err) {
       const code = err.response?.data?.code;
       setErrorCode(code);
@@ -109,7 +109,7 @@ export default function Login() {
       }
       toast.success("Logged in with Google");
       //TODO: Redirect based on role
-      navigate(ROUTES.DASHBOARD);
+      navigate(ROUTES.HOME);
     } catch {
       dispatch(authFailure("Google login failed"));
       toast.error("Google login failed");

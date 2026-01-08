@@ -20,7 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <BrowserRouter>
             <App />
             <Toaster
-              position='top-center'
+              position="top-center"
               toastOptions={{
                 duration: 3000,
                 style: { fontSize: "14px" },

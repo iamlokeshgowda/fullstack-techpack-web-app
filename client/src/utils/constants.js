@@ -8,6 +8,7 @@ export const ROUTES = {
   HOME: "/",
   DASHBOARD: "/dashboard",
   PROFILE: "/profile",
+  ADMIN_ORDER_DASHBOARD: "/admin/order-dashboard",
   PRODUCT_DETAIL: "/product/:slug",
   CART: "/cart",
   CHECKOUT: "/checkout",
@@ -30,6 +31,7 @@ export const SERVER_ROUTES = {
   // ===== CATEGORIES =====
   CATEGORIES: "/admin/categories",
   PRODUCTS: "/admin/products",
+  ORDERS: "/orders/admin/dashboard",
 
   // ===== PUBLIC =====
   PUBLIC_CATEGORIES: "/public/categories",

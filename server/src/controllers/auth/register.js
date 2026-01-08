@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, firstName, lastName, phone, email, password } = req.body;
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -21,6 +21,9 @@ export const register = async (req, res) => {
       data: {
         name,
         email,
+        firstName,
+        lastName,
+        phone,
         password: hashedPassword,
         isEmailVerified: false,
       },

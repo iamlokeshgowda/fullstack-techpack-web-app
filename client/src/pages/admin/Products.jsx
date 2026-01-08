@@ -102,17 +102,6 @@ export default function Products() {
                         alt={product.productName}
                         className="w-12 h-12 rounded object-cover border"
                       />
-                      {product.metaJson && (
-                        <script
-                          type="application/ld+json"
-                          dangerouslySetInnerHTML={{
-                            __html:
-                              typeof product.metaJson === "string"
-                                ? product.metaJson
-                                : JSON.stringify(product.metaJson),
-                          }}
-                        />
-                      )}
                     </td>
 
                     <td className="p-3">
