@@ -56,7 +56,6 @@ export const getPublicProductBySlug = async (req, res) => {
         addiInfo: true,
         productPrice: true,
         images: true,
-        downloadLink: true,
         isActive: true,
         createdAt: true,
         updatedAt: true,

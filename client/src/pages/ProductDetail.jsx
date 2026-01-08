@@ -129,97 +129,53 @@ export default function ProductDetail() {
       return;
     }
 
-    dispatch(
-      addToCart({
-        id: product.id,
-        productName: product.productName,
-        productSlug: product.productSlug,
-        productPrice: product.productPrice,
-        images: product.images,
-        quantity,
-      })
-    );
-    // persist to server
-    if (isAuthenticated) {
-      (async () => {
-        try {
-          await api.post(SERVER_ROUTES.USER_CART, {
-            productId: product.id,
-            quantity,
-          });
-        } catch (err) {
-          console.error("Failed to persist cart to server", err);
-        }
-      })();
-    }
+    handleAddToCart();
     navigate(ROUTES.CHECKOUT);
   };
 
-  const handleLoginSuccess = () => {
-    // after successful login from modal, add to cart and go to checkout
-    dispatch(
-      addToCart({
-        id: product.id,
-        productName: product.productName,
-        productSlug: product.productSlug,
-        productPrice: product.productPrice,
-        images: product.images,
-        quantity,
-      })
-    );
-    // For modal login flow, persist to server as well (token now present)
-    (async () => {
-      try {
-        await api.post(SERVER_ROUTES.USER_CART, {
-          productId: product.id,
-          quantity,
-        });
-      } catch (err) {
-        console.error("Failed to persist cart after login", err);
-      }
-    })();
+  const handleLoginSuccess = async () => {
+    handleAddToCart();
     setShowLogin(false);
     navigate(ROUTES.CHECKOUT);
   };
 
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
-      <div className='bg-white border-b p-4'>
+      <div className="bg-white border-b p-4">
         <Link
           to={ROUTES.HOME}
-          className='text-blue-600 hover:text-blue-800 flex items-center gap-1'
+          className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
         >
           ← Back to Products
         </Link>
       </div>
 
       {/* Product Details */}
-      <div className='max-w-6xl mx-auto px-4 py-8'>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* IMAGE GALLERY */}
-          <div className='space-y-4'>
-            <div className='relative bg-white rounded-lg overflow-hidden flex items-center justify-center group'>
+          <div className="space-y-4">
+            <div className="relative bg-white rounded-lg overflow-hidden flex items-center justify-center group">
               <img
                 src={currentImage}
                 alt={product.productName}
-                className='w-full h-full object-contain'
+                className="w-full h-full object-contain"
               />
 
-              {/* Navigation Buttons */}
               {displayImages.length > 1 && (
                 <>
                   <button
                     onClick={handlePrev}
-                    className='absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition'
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
                   >
-                    <ChevronLeftIcon className='w-6 h-6' />
+                    <ChevronLeftIcon className="w-6 h-6" />
                   </button>
                   <button
                     onClick={handleNext}
-                    className='absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition'
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
                   >
-                    <ChevronRightIcon className='w-6 h-6' />
+                    <ChevronRightIcon className="w-6 h-6" />
                   </button>
                 </>
               )}
@@ -227,7 +183,7 @@ export default function ProductDetail() {
 
             {/* Thumbnails */}
             {displayImages.length > 1 && (
-              <div className='flex gap-2 overflow-x-auto pb-2'>
+              <div className="flex gap-2 overflow-x-auto pb-2">
                 {displayImages.map((img, idx) => (
                   <button
                     key={idx}
@@ -241,7 +197,7 @@ export default function ProductDetail() {
                     <img
                       src={img}
                       alt={`thumbnail-${idx}`}
-                      className='w-full h-full object-cover'
+                      className="w-full h-full object-cover"
                     />
                   </button>
                 ))}
@@ -250,7 +206,7 @@ export default function ProductDetail() {
 
             {/* Dot Indicators */}
             {displayImages.length > 1 && (
-              <div className='flex gap-1 justify-center'>
+              <div className="flex gap-1 justify-center">
                 {displayImages.map((_, idx) => (
                   <button
                     key={idx}
@@ -267,94 +223,55 @@ export default function ProductDetail() {
           </div>
 
           {/* PRODUCT INFO */}
-          <div className='space-y-6'>
-            {/* Title & Price */}
+          <div className="space-y-6">
             <div>
-              <h1 className='text-3xl font-bold text-gray-900 mb-2'>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 {product.productName}
               </h1>
-              <p className='text-sm text-gray-500 mb-4'>
+              <p className="text-sm text-gray-500 mb-4">
                 {product.productSlug}
               </p>
-              <p className='text-4xl font-bold text-green-600'>
+              <p className="text-4xl font-bold text-green-600">
                 ${Number(product.productPrice || 0).toFixed(2)}
               </p>
             </div>
 
-            {/* Status */}
             <div>
               {product.isActive ? (
-                <span className='inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium'>
+                <span className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
                   In Stock
                 </span>
               ) : (
-                <span className='inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium'>
+                <span className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">
                   Out of Stock
                 </span>
               )}
             </div>
 
-            {/* Category */}
-            {product.categoryPath && product.categoryPath.length > 0 && (
-              <div>
-                <h3 className='text-sm font-semibold text-gray-600 mb-1'>
-                  Category
-                </h3>
-                <p className='text-gray-800'>
-                  {product.categoryPath
-                    .map((c) => c.catName || c.name)
-                    .join(" › ")}
-                </p>
-              </div>
-            )}
-
             {/* Short Description */}
             {product.shortDescription && (
               <div>
-                <h3 className='text-sm font-semibold text-gray-600 mb-1'>
+                <h3 className="text-sm font-semibold text-gray-600 mb-1">
                   Overview
                 </h3>
-                <p className='text-gray-700'>{product.shortDescription}</p>
+                <p className="text-gray-700">{product.shortDescription}</p>
               </div>
             )}
 
-            {/* Quantity & Cart/Checkout */}
-            <div className='space-y-4 pt-4 border-t'>
-              <div>
-                <label className='text-sm font-semibold text-gray-600 mb-2 block'>
-                  Quantity
-                </label>
-                <div className='flex items-center gap-3 border rounded w-fit px-3 py-2'>
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className='font-bold text-gray-600 hover:text-gray-900'
-                  >
-                    −
-                  </button>
-                  <span className='w-8 text-center font-semibold'>
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className='font-bold text-gray-600 hover:text-gray-900'
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div className='grid grid-cols-2 gap-3'>
+            <div className="space-y-4 pt-4 border-t">
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={handleAddToCart}
                   disabled={!product.isActive}
-                  className='bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed'
+                  className="bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   🛒 Add to Cart
                 </button>
+
                 <button
                   onClick={handleBuyNow}
                   disabled={!product.isActive}
-                  className='bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed'
+                  className="bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   💳 Buy Now
                 </button>
@@ -362,33 +279,34 @@ export default function ProductDetail() {
 
               <Link
                 to={ROUTES.CART}
-                className='block text-center text-blue-600 hover:text-blue-800 font-semibold'
+                className="block text-center text-blue-600 hover:text-blue-800 font-semibold"
               >
                 View Cart
               </Link>
             </div>
 
-            {/* Long Description - Accordion */}
             {product.longDescription && (
-              <div className='border rounded-lg'>
+              <div className="border rounded-lg">
                 <button
                   onClick={() =>
                     setOpenAccordion(
                       openAccordion === "description" ? null : "description"
                     )
                   }
-                  className='w-full flex justify-between items-center p-4 hover:bg-gray-50 transition'
+                  className="w-full flex justify-between items-center p-4 hover:bg-gray-50 transition"
                 >
-                  <h3 className='text-sm font-semibold text-gray-600'>
+                  <h3 className="text-sm font-semibold text-gray-600">
                     Description
                   </h3>
-                  <span className='text-gray-600'>
+
+                  <span className="text-gray-600">
                     {openAccordion === "description" ? "−" : "+"}
                   </span>
                 </button>
+
                 {openAccordion === "description" && (
-                  <div className='border-t px-4 py-3 bg-gray-50'>
-                    <p className='text-gray-700 whitespace-pre-wrap'>
+                  <div className="border-t px-4 py-3 bg-gray-50">
+                    <p className="text-gray-700 whitespace-pre-wrap">
                       {product.longDescription}
                     </p>
                   </div>
@@ -398,7 +316,7 @@ export default function ProductDetail() {
 
             {/* Additional Info - Accordion */}
             {product.addiInfo && (
-              <div className='border rounded-lg'>
+              <div className="border rounded-lg">
                 <button
                   onClick={() =>
                     setOpenAccordion(
@@ -407,18 +325,18 @@ export default function ProductDetail() {
                         : "additionalInfo"
                     )
                   }
-                  className='w-full flex justify-between items-center p-4 hover:bg-gray-50 transition'
+                  className="w-full flex justify-between items-center p-4 hover:bg-gray-50 transition"
                 >
-                  <h3 className='text-sm font-semibold text-gray-600'>
+                  <h3 className="text-sm font-semibold text-gray-600">
                     Additional Information
                   </h3>
-                  <span className='text-gray-600'>
+                  <span className="text-gray-600">
                     {openAccordion === "additionalInfo" ? "−" : "+"}
                   </span>
                 </button>
                 {openAccordion === "additionalInfo" && (
-                  <div className='border-t px-4 py-3 bg-gray-50'>
-                    <p className='text-gray-700 whitespace-pre-wrap'>
+                  <div className="border-t px-4 py-3 bg-gray-50">
+                    <p className="text-gray-700 whitespace-pre-wrap">
                       {product.addiInfo}
                     </p>
                   </div>
@@ -426,40 +344,36 @@ export default function ProductDetail() {
               </div>
             )}
 
-            {/* Download files are available after purchase */}
-
             {/* Meta Info */}
             {product.metaDesc && (
-              <div className='bg-gray-100 p-4 rounded-lg'>
-                <h4 className='text-xs font-semibold text-gray-600 uppercase mb-1'>
-                  Meta Description
-                </h4>
-                <p className='text-sm text-gray-700'>{product.metaDesc}</p>
+              <div className="border rounded-lg">
+                <button
+                  onClick={() =>
+                    setOpenAccordion(
+                      openAccordion === "metaDesc" ? null : "metaDesc"
+                    )
+                  }
+                  className="w-full flex justify-between items-center p-4 hover:bg-gray-50 transition"
+                >
+                  <h3 className="text-sm font-semibold text-gray-600">
+                    Meta Description
+                  </h3>
+                  <span className="text-gray-600">
+                    {openAccordion === "metaDesc" ? "−" : "+"}
+                  </span>
+                </button>
+                {openAccordion === "metaDesc" && (
+                  <div className="border-t px-4 py-3 bg-gray-50">
+                    <p className="text-gray-700 whitespace-pre-wrap">
+                      {product.metaDesc}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>
         </div>
 
-        {/* Meta Keywords */}
-        {product.metaKeyword && (
-          <div className='mt-8 pt-8 border-t'>
-            <h3 className='text-sm font-semibold text-gray-600 mb-3'>
-              Keywords
-            </h3>
-            <div className='flex flex-wrap gap-2'>
-              {product.metaKeyword.split(",").map((keyword, idx) => (
-                <span
-                  key={idx}
-                  className='bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm'
-                >
-                  {keyword.trim()}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Login Modal for Buy Now when unauthenticated */}
         <Suspense fallback={null}>
           <LoginModal
             open={showLogin}
@@ -467,28 +381,15 @@ export default function ProductDetail() {
             onSuccess={handleLoginSuccess}
           />
         </Suspense>
-
-        {/* SEO JSON-LD - use admin-provided metaJson */}
-        {product.metaJson && (
-          <script
-            type='application/ld+json'
-            dangerouslySetInnerHTML={{
-              __html:
-                typeof product.metaJson === "string"
-                  ? product.metaJson
-                  : JSON.stringify(product.metaJson),
-            }}
-          />
-        )}
       </div>
 
-      <div className='p-6 max-w-7xl mx-auto'>
+      <div className="p-6 max-w-7xl mx-auto">
         {products.status === "loading" && <Loader />}
         {products.status === "failed" && <p>Failed to load products.</p>}
 
         {products.status === "succeeded" && relatedProducts.length > 0 && (
-          <section className='p-6 max-w-7xl mx-auto'>
-            <h2 className='text-2xl font-bold mb-6'>Related Products</h2>
+          <section className="p-6 max-w-7xl mx-auto">
+            <h2 className="text-2xl font-bold mb-6">Related Products</h2>
             <ProductGrid products={relatedProducts.slice(0, 6)} />
           </section>
         )}
@@ -498,15 +399,15 @@ export default function ProductDetail() {
 }
 
 const Loader = () => (
-  <div className='flex items-center justify-center min-h-screen text-gray-600'>
+  <div className="flex items-center justify-center min-h-screen text-gray-600">
     Loading...
   </div>
 );
 
 const ErrorState = ({ error }) => (
-  <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
-    <p className='text-red-600'>{error}</p>
-    <Link to={ROUTES.HOME} className='text-blue-600 underline'>
+  <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+    <p className="text-red-600">{error}</p>
+    <Link to={ROUTES.HOME} className="text-blue-600 underline">
       Back to Home
     </Link>
   </div>

@@ -9,6 +9,7 @@ import Profile from "../pages/Profile";
 import NotFound from "../pages/NotFound";
 import Categories from "../pages/admin/Categories";
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import OrdersDashboard from "../pages/admin/OrdersDashboard";
 import Home from "../pages/Home";
 import ProductDetail from "../pages/ProductDetail";
 import Cart from "../pages/Cart";
@@ -45,13 +46,17 @@ const AppRoutes = () => {
       {/* ADMIN Routes */}
       <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
         <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+        <Route
+          path={ROUTES.ADMIN_ORDER_DASHBOARD}
+          element={<OrdersDashboard />}
+        />
         <Route path={ROUTES.ADMIN_CATEGORIES} element={<Categories />} />
         <Route path={ROUTES.ADMIN_PRODUCTS} element={<Products />} />
       </Route>
 
       {/* Fallback */}
       <Route path={ROUTES.UNAUTHORIZED} element={<Unauthorized />} />
-      <Route path='*' element={<NotFound />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

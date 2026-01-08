@@ -9,7 +9,24 @@ export default async function getUserOrders(req, res) {
     const orders = await prisma.order.findMany({
       where: { userId },
       include: {
-        orderItems: true,
+        orderItems: {
+          select: {
+            id: true,
+            productId: true,
+            productPrice: true,
+            quantity: true,
+            downloadItemCount: true,
+            createdAt: true,
+            updatedAt: true,
+
+            product: {
+              select: {
+                productName: true,
+                productSlug: true,
+              },
+            },
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     });

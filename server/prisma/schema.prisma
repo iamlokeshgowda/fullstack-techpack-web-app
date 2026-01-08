@@ -169,8 +169,9 @@ model Product {
 
   isActive Boolean @default(true)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  OrderItem OrderItem[]
 }
 
 model CartItem {
@@ -191,16 +192,15 @@ model CartItem {
 model Order {
   id String @id @default(uuid())
 
-  userId      String
-  orderNumber String @unique
+  userId        String
+  orderNumber   String @unique
   paypalOrderId String @unique
 
-  paidAt         DateTime?
-  transactionId  String?
-  paidAmount     Float?
-  currency       String?
-  payerEmail     String?
-
+  paidAt        DateTime?
+  transactionId String?
+  paidAmount    Float?
+  currency      String?
+  payerEmail    String?
 
   // Customer info snapshot
   firstName String
@@ -233,15 +233,15 @@ model Order {
 model OrderItem {
   id String @id @default(uuid())
 
-  orderId      String
-  productId    String
-  productPrice Decimal @db.Decimal(10, 2)
-  quantity     Int
-  downloadLink String? // Link to the downloadable zip file for this product
-  downloadItemCount Int @default(0) // Number of times this item has been downloaded by the user
+  orderId           String
+  productId         String
+  productPrice      Decimal @db.Decimal(10, 2)
+  quantity          Int
+  downloadItemCount Int     @default(0) // Number of times this item has been downloaded by the user
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
 }
